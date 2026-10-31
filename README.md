@@ -10,7 +10,7 @@ Starter repository for an in-person hackathon where teams of Earth scientists gi
 | Format | In person only, teams, setup clinic before the start |
 | Date, venue, duration, registration | **TBD** |
 | Agenda | [Provisional one-day agenda](docs/agenda.md) |
-| Repository destination (public URL) | **TBD** – this copy was built locally |
+| Repository | [github.com/midatm1234/earth-science-mcp-hackathon](https://github.com/midatm1234/earth-science-mcp-hackathon) (public) |
 | Shared MCP server endpoint | **TBD** – not needed; everything runs on laptops ([plan](docs/server-deployment-plan.md)) |
 
 ## What you need

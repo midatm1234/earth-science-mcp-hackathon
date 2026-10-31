@@ -36,8 +36,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: astral-sh/setup-uv@v10
+      # setup-uv publishes full version tags only (no moving major tag).
+      - uses: astral-sh/setup-uv@v10.3.3
         with:
+          version: "0.13.6"   # same uv that wrote uv.lock
           python-version: ${{ matrix.python }}
 
       - name: Lock file is current (dependency reproducibility)
@@ -50,7 +52,8 @@ jobs:
         shell: bash
         run: |
           uv export --frozen --no-hashes --no-dev --no-emit-project -o /tmp/req.txt --quiet
-          diff <(grep -v '^#' requirements.txt) <(grep -v '^#' /tmp/req.txt)
+          # --strip-trailing-cr: Windows runners check files out with CRLF line endings
+          diff --strip-trailing-cr <(grep -v '^#' requirements.txt) <(grep -v '^#' /tmp/req.txt)
 
       - name: All repository checks
         run: uv run python scripts/check_all.py

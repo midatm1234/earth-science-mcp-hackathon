@@ -17,7 +17,7 @@ Mentors must be able to: run every tutorial on their own laptop; read a stack tr
 | Item | Where it appears | Status |
 |---|---|---|
 | Event date, venue, duration, registration | README, agenda | TBD |
-| Public repository destination (GitHub org/repo) | README, START_HERE, setup, tutorial 05, CODEOWNERS | TBD |
+| Public repository destination (GitHub org/repo) | README, START_HERE, setup, tutorial 05, CODEOWNERS | **Decided 2026-10-30:** [github.com/midatm1234/earth-science-mcp-hackathon](https://github.com/midatm1234/earth-science-mcp-hackathon) (public) |
 | Bundle distribution location (download page, shared drive, USB) | START_HERE, setup, tutorial 05 | TBD |
 | Which assistants/plans to recommend (Copilot Free, ChatGPT Free and Claude plans have usage limits) | setup | TBD – confirm against current GitHub, OpenAI and Anthropic plan pages |
 | Shared MCP server endpoint (future) | server-deployment-plan, .env.example | TBD – not needed for the event |

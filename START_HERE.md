@@ -28,7 +28,7 @@ You do not need to know Python, Git or MCP. Copy each command exactly. A "termin
 Either:
 
 - **Without GitHub:** download the event ZIP from the link or USB stick provided by the organizers (location **TBD**), and unzip it into a normal folder such as `Documents` (not a OneDrive, iCloud or Google Drive synced folder); or
-- **With Git:** `git clone <repository URL, TBD>`.
+- **With Git:** `git clone https://github.com/midatm1234/earth-science-mcp-hackathon.git`.
 
 In VS Code: **File → Open Folder…** and choose the **`earth-science-mcp-hackathon`** folder itself (not a folder above it). When VS Code asks *"Do you trust the authors of the files in this folder?"*, choose **Yes, I trust the authors**. The AI assistants only read this project's settings in a trusted folder that is open at its top level.
 

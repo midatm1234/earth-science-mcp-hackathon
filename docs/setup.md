@@ -38,7 +38,7 @@ You do **not** need API keys or API credits for any provider, Azure OpenAI, a cl
 | Route | Steps |
 |---|---|
 | No GitHub account | Download the event bundle ZIP from the organizer's link, shared drive or USB stick (**TBD**). Check its SHA-256 if given: macOS/Linux `shasum -a 256 file.zip`; Windows `Get-FileHash file.zip`. Unzip. |
-| Git | `git clone <URL TBD>` |
+| Git | `git clone https://github.com/midatm1234/earth-science-mcp-hackathon.git` |
 
 In VS Code use **File → Open Folder…** and select the `earth-science-mcp-hackathon` folder **itself**. Every assistant reads its configuration from the top of the opened folder: `.mcp.json`, `.codex/config.toml`, `AGENTS.md`, `.claude/` and `.agents/`. If you open a parent folder, none of it is found.
 

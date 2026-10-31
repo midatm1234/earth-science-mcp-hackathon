@@ -1,8 +1,8 @@
-# Shared infrastructure needs organizer review. Handles are TBD until the
-# repository destination is decided; replace @TBD-organizer before publishing.
-/.github/            @TBD-organizer
-/scripts/            @TBD-organizer
-/templates/          @TBD-organizer
-/catalog/README.md   @TBD-organizer
-/pyproject.toml      @TBD-organizer
-/uv.lock             @TBD-organizer
+# Shared infrastructure needs review by the repository owner (organizer).
+# Add mentors' GitHub handles here when they are known.
+/.github/            @midatm1234
+/scripts/            @midatm1234
+/templates/          @midatm1234
+/catalog/README.md   @midatm1234
+/pyproject.toml      @midatm1234
+/uv.lock             @midatm1234

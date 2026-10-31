@@ -37,7 +37,7 @@ git commit -m "Add <server-name> and <skill-name> (<team-slug>)"
 git push -u origin team/<team-slug>
 ```
 
-Then open a pull request on GitHub (repository URL **TBD**) and fill in the template. If you forked the repository first: `gh repo fork <URL TBD> --clone`, then the same commands. CI runs the same checks as `check_all.py` and never deploys anything.
+Then open a pull request on GitHub (https://github.com/midatm1234/earth-science-mcp-hackathon) and fill in the template. If you forked the repository first: `gh repo fork midatm1234/earth-science-mcp-hackathon --clone`, then the same commands. CI runs the same checks as `check_all.py` and never deploys anything.
 
 ### 3b. Mentor-assisted route (no GitHub needed)
 
