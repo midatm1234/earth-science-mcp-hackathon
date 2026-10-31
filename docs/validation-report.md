@@ -53,7 +53,7 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 | 24 | Submission and peer-testing flow | `/tmp/author`: scaffold → fill → `check_all` → `package.py contribution`; `/tmp/reviewer`: fresh bundle → `package.py verify` → unzip → `install_skills.py` → server tests → validator | **pass** after fixes found by this test (test-name collision; per-artifact manifest names) |
 | 25 | Distribution bundle | `package.py bundle`; `package.py verify` | **pass** – 92 files, ~0.7 MB, deterministic archive with SHA-256 manifest |
 | 27 | Client config consistency | `scripts/client_config.py check`; validator `clients`; negative tests (mismatched args, unregistered server) | **pass** |
-| 26 | GitHub Actions | `.github/workflows/checks.yml` | **pending** – YAML parses and its commands pass locally; never run on GitHub (no remote) |
+| 26 | GitHub Actions on push to `main` | `.github/workflows/checks.yml`, [run 41177032319](https://github.com/midatm1234/earth-science-mcp-hackathon/actions/runs/41177032319) | **pass, 5/5 jobs** – Windows Server 2025 (3.13.17), Ubuntu 24.04 (3.11.18, 3.13.18, 3.14.10), macOS 26 arm64 (3.13.16): lock check, locked install, requirements-vs-lock, `check_all.py` (18 server + 15 tooling tests), ruff. Found before the push: `astral-sh/setup-uv@v10` does not exist (pinned to `v10.3.3`); CRLF checkouts on Windows (diff uses `--strip-trailing-cr`) |
 
 ## Defects found and fixed during validation
 
@@ -84,9 +84,9 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 |---|---|---|---|
 | P1 | Claude Code with a **Claude subscription**: `/status`, then `uv run python scripts/verify_agent_workflow.py --client claude` (five checks) | organizer, rehearsal | Claude Code column of compatibility |
 | P2 | **VS Code GUI** walk-through of START_HERE step 5 with each assistant (Copilot Chat view, Claude Code panel, Codex panel), including the Workspace Trust and Codex trust prompts | organizer, rehearsal | GUI claims (engines are tested) |
-| P3 | Windows 10/11 and Linux: START_HERE steps 1–5 and `check_all.py` | mentor laptops, or CI after push | compatibility rows |
+| P3 | Windows 10/11 and Linux **laptops**: START_HERE steps 1–5 with an assistant (PowerShell installers, VS Code, trust prompts). Automated checks already pass on Windows Server 2025 and Ubuntu 24.04 in CI | mentor laptops | desktop compatibility rows |
 | P4 | Copilot **Free** and ChatGPT **Free** accounts complete the tutorials within their limits | organizer | plan guidance (TBD) |
-| P5 | GitHub Actions run green on all five matrix jobs | after the repository destination is decided | CI claim |
+| P5 | GitHub Actions run green on all five matrix jobs | **done** 2026-10-31 (row 26) | – |
 | P6 | MCP Inspector against the HTTP server | optional | – |
 | P7 | Independent peer test of the starter by a non-author | mentor | catalog `peer_testing` (currently empty) |
 | P8 | Shared server deployment | not planned until a host is authorized | `hosting` stays `not-hosted` |
@@ -96,7 +96,7 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 
 | Area | Readiness |
 |---|---|
-| Laptop core path without AI (setup, first call, both transports, tests, scaffold, packaging) | **Ready** on macOS arm64; untested on Windows/Linux |
+| Laptop core path without AI (setup, first call, both transports, tests, scaffold, packaging) | **Ready** on macOS arm64; automated checks pass on Windows Server 2025, Ubuntu 24.04 and macOS 26 in CI; Windows/Linux laptop walk-through pending (P3) |
 | Scientific starter and tests | **Ready** |
 | GitHub Copilot | **Engine verified** (5/5 checks, scaffolded server); VS Code GUI walk-through pending (P2) |
 | Codex | **Engine verified** (5/5, binary from the VS Code extension); project-trust step must be done once per laptop; GUI walk-through pending (P2) |
@@ -104,4 +104,5 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 | Discovery with Earthdata MCP | **Ready** (live verified through Copilot and Codex; cached fallback) |
 | Documentation and tutorials | **Complete** for all three assistants; links verified |
 | Submission, catalog, peer-testing workflow | **Ready** (dry run passed) |
-| Remote repository, CI, hosting | **TBD** by organizer |
+| Remote repository and CI | **Done**: public at github.com/midatm1234/earth-science-mcp-hackathon; CI green on push |
+| Hosting, bundle distribution location, event logistics | **TBD** by organizer |

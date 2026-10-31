@@ -48,10 +48,13 @@ Additional checks that passed with Copilot and Codex: a team server and skill cr
 | macOS 27.0.1, arm64 | 3.14.3 (Homebrew) | pip + venv, `requirements*.txt` | **tested** – all checks pass | 2026-10-30 |
 | macOS 27.0.1, arm64 | 3.13.18 | offline wheelhouse (`UV_OFFLINE=1`) | **tested** – all checks pass | 2026-10-30 |
 | macOS Intel (x86_64) | 3.11–3.14 | uv | documented, untested | – |
-| Windows 10/11 (x64, PowerShell) | 3.11–3.14 | uv / pip | documented, **untested** (CI job defined, not yet run) | – |
-| Linux (Ubuntu 22.04/24.04) | 3.11–3.14 | uv / pip | documented, **untested** (CI jobs defined, not yet run) | – |
+| Windows Server 2025 x64 (GitHub `windows-2025` runner image) | 3.13.17 | uv 0.13.6 (`uv sync --locked`) | **tested in CI** – `check_all.py` incl. stdio and HTTP transport tests, lint, lock checks ([run](https://github.com/midatm1234/earth-science-mcp-hackathon/actions/runs/41177032319)) | 2026-10-31 |
+| Ubuntu 24.04 x64 (GitHub runner image) | 3.11.18, 3.13.18, 3.14.10 | uv 0.13.6 | **tested in CI** – same checks ([run](https://github.com/midatm1234/earth-science-mcp-hackathon/actions/runs/41177032319)) | 2026-10-31 |
+| macOS 26 arm64 (GitHub runner image) | 3.13.16 | uv 0.13.6 | **tested in CI** – same checks ([run](https://github.com/midatm1234/earth-science-mcp-hackathon/actions/runs/41177032319)) | 2026-10-31 |
+| Windows 10/11 desktop (participant laptop, PowerShell installers, VS Code + assistant) | 3.11–3.14 | uv / pip | documented, **untested** | – |
+| Linux desktop (participant laptop, VS Code + assistant) | 3.11–3.14 | uv / pip | documented, **untested** | – |
 
-The GitHub Actions workflow ([checks.yml](../.github/workflows/checks.yml)) covers Ubuntu (3.11, 3.13, 3.14), macOS and Windows (3.13) once the repository is pushed (destination **TBD**). It runs no AI assistant.
+The GitHub Actions workflow ([checks.yml](../.github/workflows/checks.yml)) runs on every push to `main` and every pull request: Ubuntu (3.11, 3.13, 3.14), macOS and Windows (3.13). It runs no AI assistant, so it does not cover the assistant rows above.
 
 ## MCP SDK and protocol
 
