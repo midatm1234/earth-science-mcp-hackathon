@@ -2,7 +2,7 @@
 name: __SKILL_NAME__
 description: REPLACE with what the skill does and the tools it uses. Use when REPLACE with the user requests that should trigger it (include the words scientists actually use).
 license: Apache-2.0
-compatibility: Requires the __SERVER_NAME__ MCP server connected to the client. Tested with Claude Code; see docs/compatibility.md.
+compatibility: Requires the __SERVER_NAME__ MCP server connected to the client. Record the assistants you tested in submissions/<team>/submission.md.
 allowed-tools: mcp____SERVER_NAME____summarize_values
 metadata:
   version: "0.1.0"
@@ -24,9 +24,13 @@ One paragraph: the scientific workflow this skill guides and why a procedure is 
 
 ## Required tools
 
-| Tool (Claude Code name) | Use |
+From the MCP server **`__SERVER_NAME__`**:
+
+| Tool | Use |
 |---|---|
-| `mcp____SERVER_NAME____summarize_values` | REPLACE |
+| `summarize_values` | REPLACE |
+
+Assistants add their own prefix (Claude Code `mcp____SERVER_NAME____summarize_values`, Copilot `__SERVER_NAME__-summarize_values`, Codex `mcp__<server name with _ for ->__summarize_values`). The `allowed-tools` header uses Claude Code names; other assistants ignore it.
 
 If these tools are not available, stop and say which MCP server must be connected. Do not guess numbers.
 
@@ -57,6 +61,6 @@ If these tools are not available, stop and say which MCP server must be connecte
 
 ## Example tasks
 
-- `/__SKILL_NAME__` REPLACE explicit invocation example
+- `/__SKILL_NAME__` (Claude Code, Copilot) or `$__SKILL_NAME__` (Codex) REPLACE explicit invocation example
 - "REPLACE natural-language request that should trigger the skill"
 - Not applicable: "REPLACE request where the skill should not be used"

@@ -18,10 +18,18 @@ Starter repository for an in-person hackathon where teams of Earth scientists gi
 | Requirement | Cost | Notes |
 |---|---|---|
 | A laptop (macOS, Windows or Linux) | – | 4 GB RAM, ~1 GB free disk, administrator rights not required |
-| A **Claude subscription** that includes Claude Code | paid (the only paid item) | Sign in with your Claude account. No API credits needed. |
-| uv, Claude Code, optionally Git and VS Code | free | Step-by-step in [docs/setup.md](docs/setup.md) |
+| [VS Code](https://code.visualstudio.com/) and [uv](https://docs.astral.sh/uv/) | free | Step-by-step in [docs/setup.md](docs/setup.md) |
+| **One** AI coding assistant in VS Code, your choice | see below | Sign in with your own account; no API keys or API credits |
 
-Not required: Anthropic API credits, Azure OpenAI, OpenAI credits, GitHub Copilot, a cloud account, a GPU, Docker, Jupyter, a GitHub account, or prior Git experience.
+| Assistant | VS Code integration | Account |
+|---|---|---|
+| **GitHub Copilot** | built into VS Code (Chat view) | GitHub account with Copilot (Copilot Free exists; limits apply) |
+| **Claude Code** | Anthropic's *Claude Code* extension | Claude subscription that includes Claude Code |
+| **Codex** | OpenAI's *Codex* extension | ChatGPT account (Codex is included in ChatGPT plans, including Free; limits apply) |
+
+All three read the same repository: MCP servers from [.mcp.json](.mcp.json) (Copilot, Claude Code) and [.codex/config.toml](.codex/config.toml) (Codex), skills from `skills/` installed for every assistant by one command. What was tested with each is in [docs/compatibility.md](docs/compatibility.md).
+
+Not required: API credits of any provider, Azure OpenAI, a paid cloud account, a GPU, Docker, Jupyter, a GitHub account for submission, or prior Git experience.
 
 ## What is in this repository
 
@@ -34,7 +42,7 @@ Not required: Anthropic API credits, Azure OpenAI, OpenAI credits, GitHub Copilo
 | [templates/](templates/) | Starting points for a new server, a new skill, discovery record, submission, peer-test report and demo |
 | [catalog/](catalog/) | Records of every MCP server and skill, with separate review, verification, peer-test and hosting status ([index](catalog/index.md)) |
 | [examples/data/](examples/data/) | Index of example data, including a dated cached Earthdata response |
-| [scripts/](scripts/) | First call, Earthdata probe, scaffold, skill installer, validation, packaging, Claude workflow checks |
+| [scripts/](scripts/) | First call, Earthdata probe, scaffold, skill installer, validation, packaging, assistant workflow checks |
 | [tests/](tests/) | Tests of the repository tooling |
 | [.github/](.github/) | Pull-request checks (no secrets, no deployment), templates |
 
@@ -42,7 +50,7 @@ Not required: Anthropic API credits, Azure OpenAI, OpenAI credits, GitHub Copilo
 
 | Step | Tutorial | You will |
 |---|---|---|
-| 0 | [First tool call](tutorials/00-first-tool-call.md) | Call an MCP tool from a script and from Claude Code |
+| 0 | [First tool call](tutorials/00-first-tool-call.md) | Call an MCP tool from a script and from your AI assistant |
 | 1 | [Discover existing capabilities](tutorials/01-discover-existing-capabilities.md) | Use Earthdata MCP and the catalog; fill a discovery record |
 | 2 | [Build an MCP tool](tutorials/02-build-an-mcp-tool.md) | Extend the starter or a new server with one tested tool |
 | 3 | [Create an agent skill](tutorials/03-create-an-agent-skill.md) | Write and test a SKILL.md that guides your tools |

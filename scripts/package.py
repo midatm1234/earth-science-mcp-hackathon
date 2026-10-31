@@ -33,7 +33,8 @@ DIST = REPO / "dist"
 EXCLUDE_PARTS = {"__pycache__", ".pytest_cache", ".ruff_cache", ".venv", "venv", ".git", "dist", "verification", "wheelhouse",
                  ".claude", ".DS_Store"}
 SHARED = ["README.md", "START_HERE.md", "CONTRIBUTING.md", "AGENTS.md", "CLAUDE.md", "pyproject.toml", "uv.lock",
-          "requirements.txt", "requirements-dev.txt", ".python-version", ".mcp.json", ".env.example", ".gitignore",
+          "requirements.txt", "requirements-dev.txt", ".python-version", ".mcp.json", ".codex/config.toml", ".env.example",
+          ".gitignore",
           "LICENSE", "NOTICE", "docs", "tutorials", "templates", "scripts", "tests", "catalog", "examples",
           "submissions", "servers/README.md", "skills/README.md", ".github"]
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)  # deterministic archives: identical inputs give identical SHA-256

@@ -1,11 +1,12 @@
 # Guidance for coding agents
 
-This file tells AI coding agents (Claude Code, and others that read `AGENTS.md`) how to work in this repository. Humans: see [CONTRIBUTING.md](CONTRIBUTING.md).
+This file tells AI coding agents (GitHub Copilot, Codex and Claude Code via `CLAUDE.md`) how to work in this repository. Humans: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Repository map
 
 - `servers/<name>/` – MCP servers. `science.py` holds scientific functions (no MCP imports); `server.py` is a thin MCP wrapper using `mcp.server.mcpserver.MCPServer` (MCP Python SDK 2.x, **not** the v1 `mcp.server.fastmcp` import).
-- `skills/<name>/SKILL.md` – canonical agent skills. `.claude/skills/` holds installed copies; never edit them, edit `skills/` and run `uv run python scripts/install_skills.py`.
+- `skills/<name>/SKILL.md` – canonical agent skills. `.claude/skills/` and `.agents/skills/` hold installed copies; never edit them, edit `skills/` and run `uv run python scripts/install_skills.py`.
+- `.mcp.json` (Copilot, Claude Code) and `.codex/config.toml` (Codex) register MCP servers; keep them identical with `uv run python scripts/client_config.py register <name>` / `check`.
 - `catalog/entries/*.yaml` – one record per server or skill; regenerate `catalog/index.md` with `uv run python scripts/catalog.py index`.
 - `templates/` – scaffolding used by `scripts/new_contribution.py`.
 - `docs/`, `tutorials/` – participant documentation for beginners; keep wording plain and steps exact.

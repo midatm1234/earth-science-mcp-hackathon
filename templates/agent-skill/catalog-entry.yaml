@@ -24,7 +24,7 @@ dependencies:
   python: ">=3.11,<3.15"
   packages: []
 requires_mcp_tools:
-  - mcp____SERVER_NAME____summarize_values
+  - __SERVER_NAME__/summarize_values
 tools: []
 transports: []
 install: uv run python scripts/install_skills.py __SKILL_NAME__

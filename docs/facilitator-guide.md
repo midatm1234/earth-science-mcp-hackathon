@@ -19,7 +19,7 @@ Mentors must be able to: run every tutorial on their own laptop; read a stack tr
 | Event date, venue, duration, registration | README, agenda | TBD |
 | Public repository destination (GitHub org/repo) | README, START_HERE, setup, tutorial 05, CODEOWNERS | TBD |
 | Bundle distribution location (download page, shared drive, USB) | START_HERE, setup, tutorial 05 | TBD |
-| Minimum Claude plan to recommend | setup | TBD – confirm against current Anthropic plan pages |
+| Which assistants/plans to recommend (Copilot Free, ChatGPT Free and Claude plans have usage limits) | setup | TBD – confirm against current GitHub, OpenAI and Anthropic plan pages |
 | Shared MCP server endpoint (future) | server-deployment-plan, .env.example | TBD – not needed for the event |
 | Feedback form | agenda | TBD |
 | Prizes/judging (if any) | not covered | TBD |
@@ -30,7 +30,7 @@ Mentors must be able to: run every tutorial on their own laptop; read a stack tr
 |---|---|
 | T−6 weeks | Decide TBDs above. Create the public repository; push this repository; set branch protection (require the `checks` workflow). |
 | T−4 weeks | Recruit mentors; give them this guide; each mentor completes all tutorials and one peer test of the starter. |
-| T−3 weeks | Confirm Claude plan guidance; check [compatibility.md](compatibility.md) on Windows and Linux laptops (fill the "untested" rows). |
+| T−3 weeks | Confirm assistant/plan guidance; check [compatibility.md](compatibility.md) on Windows and Linux laptops (fill the "untested" rows). |
 | T−2 weeks | Send participants [START_HERE.md](../START_HERE.md) and ask them to finish steps 1–4. Offer a remote setup clinic. |
 | T−1 week | **Rehearsal** (checklist below). Freeze the starter version; build the bundle. |
 | T−1 day | Rebuild the bundle if anything changed; copy bundle and wheelhouse to USB sticks; print the agenda and the peer-test report template. |
@@ -42,17 +42,17 @@ Run on at least one macOS and one Windows laptop, ideally also Linux, from a cle
 - [ ] `uv sync` from the bundle ZIP; `uv run python scripts/first_call.py` ends with `Success:`.
 - [ ] `uv run python scripts/check_all.py` → `ALL CHECKS PASSED`.
 - [ ] HTTP path: server with `--transport http`, client with `--http http://127.0.0.1:8765/mcp`.
-- [ ] Claude Code sign-in with a **subscription** account; `/status` shows the Claude account.
+- [ ] For **each** assistant (Copilot, Claude Code, Codex) in VS Code: personal-account sign-in (Claude `/status` shows the Claude account; Codex shows the ChatGPT account).
 - [ ] Project MCP approval prompt appears; `/mcp` shows `obs-model-starter` and `earthdata` connected.
 - [ ] `uv run python scripts/install_skills.py`; `/obs-model-comparison` appears in the `/` menu.
-- [ ] `uv run python scripts/verify_claude_workflow.py` → all five checks pass; paste the summary into [validation-report.md](validation-report.md).
-- [ ] VS Code + Claude Code extension: same skill and MCP servers visible.
+- [ ] `uv run python scripts/verify_agent_workflow.py --client claude`, `--client copilot`, `--client codex` → five checks pass each; paste the summaries into [validation-report.md](validation-report.md).
+- [ ] In the VS Code GUI with each assistant: START_HERE step 5 succeeds (MCP servers listed, skill invoked, MCP tools called – not a shell script). Codex: project trust prompt works.
 - [ ] Earthdata live check: `uv run python scripts/earthdata_probe.py --list-tools`.
 - [ ] Scaffold a dummy team: `new_contribution.py --team rehearsal --server rehearsal-tools --skill rehearsal-check`; template tests pass; delete afterwards.
 - [ ] Package and verify: `package.py contribution obs-model-starter` then `package.py verify ...`.
 - [ ] Peer-test the starter with the report template in ≤ 25 minutes.
 - [ ] Mentor-assisted route end to end: ZIP → mentor imports → branch → PR → CI green.
-- [ ] Venue: Wi-Fi allows `astral.sh`, `pypi.org`, `files.pythonhosted.org`, `claude.ai`, `api.anthropic.com`, `cmr.earthdata.nasa.gov`; power strips; projector.
+- [ ] Venue: Wi-Fi allows `astral.sh`, `pypi.org`, `files.pythonhosted.org`, `claude.ai`, `api.anthropic.com`, `github.com`, `api.githubcopilot.com`, `chatgpt.com`, `api.openai.com`, `marketplace.visualstudio.com`, `cmr.earthdata.nasa.gov`; power strips; projector.
 - [ ] Time the setup clinic: how long does a fresh laptop take? Adjust the agenda.
 
 ## Building the bundle (distribution without GitHub)
@@ -85,7 +85,7 @@ With this route, use `uv run --no-sync` instead of `uv run` (so uv does not try 
 
 | Time | Facilitator action |
 |---|---|
-| Setup clinic | Tick each participant's six checks. Laptops that cannot run Claude Code: pair them with a teammate; they can still run all plain-client and test steps. |
+| Setup clinic | Tick each participant's six checks. Laptops that cannot run any assistant: pair them with a teammate; they can still run all plain-client and test steps. |
 | Discovery | Sign each discovery record. Reject "build" decisions without a stated gap; steer to "extend" where possible. Keep scope to one tool + one skill. |
 | Build | Walk the room; insist on tests and on logging to stderr; watch for credentials in code. |
 | Lunch | Each team runs `check_all.py --fast`; note teams at risk. |
@@ -108,7 +108,7 @@ The required files and metadata are identical to the PR route.
 
 | Situation | Response |
 |---|---|
-| Claude usage limits hit during the day | Continue deterministic work; mark agent checks blocked; resume later. Short sessions and `/clear` reduce usage. |
+| Assistant usage limits hit during the day | Continue deterministic work; mark agent checks blocked; resume later or switch to another assistant the participant has. Short chats reduce usage. |
 | Venue internet down | Starter, tests, skills authoring and packaging work offline (after `uv sync`). Earthdata checks become blocked; use the cached example for practice. |
 | Earthdata MCP down | Same as above for discovery; continue with check B (catalog). |
 | A team's laptop cannot install anything | Pair with another team member; mentor laptop for the final checks. |

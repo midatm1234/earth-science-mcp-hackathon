@@ -3,10 +3,10 @@
 | | |
 |---|---|
 | **Scientific purpose** | Answer a realistic question that needs several capabilities: find and verify real data (Earthdata MCP), run your own analysis (your server), and report it with a consistent procedure (your skill). |
-| **Learning objective** | Plan a multi-tool workflow, run it in one Claude Code session, read the tool trace, and identify which part (tool, skill, data) is responsible for each statement in the answer. |
+| **Learning objective** | Plan a multi-tool workflow, run it in one session of your AI assistant, read the tool trace, and identify which part (tool, skill, data) is responsible for each statement in the answer. |
 | **Estimated time** | 30 minutes |
 | **Starting state** | Tutorials 01–03 done; your tool and skill installed; `earthdata` connected. |
-| **Credentials** | Claude subscription. No Earthdata Login (no downloads). |
+| **Credentials** | Your AI assistant's account. No Earthdata Login (no downloads). |
 
 ## The pattern
 
@@ -25,15 +25,11 @@ Write down, before prompting: the question; which tool answers which sub-questio
 
 ## Step 2 – Run (15 minutes)
 
-```bash
-claude
-```
-
-Example with the starter capabilities:
+Open a new chat in your assistant. Type `/` (Copilot, Claude Code) or `$` (Codex) before the skill name to invoke it explicitly. Example with the starter capabilities:
 
 ```text
 We want to evaluate a model's monthly 2 m temperature against station data in central California for 2020.
-1) Use /earth-data-discovery to check whether MERRA-2 monthly T2M (M2TMNXSLV) is available for POLYGON((-121 33,-117 33,-117 38,-121 38,-121 33)) in 2020, and note its units.
+1) Use the earth-data-discovery skill to check whether MERRA-2 monthly T2M (M2TMNXSLV) is available for POLYGON((-121 33,-117 33,-117 38,-121 38,-121 33)) in 2020, and note its units.
 2) Then use the obs-model-comparison procedure to show, with the synthetic sample data, how the comparison would be reported at SYN-VALLEY for 2020.
 Clearly separate real-metadata results from synthetic-data results.
 ```

@@ -13,6 +13,7 @@ Checks
     links        relative Markdown links and #anchors resolve
     tooltests    each server has tests that make real MCP tool calls
     index        catalog/index.md is up to date (scripts/catalog.py index)
+    clients      .mcp.json and .codex/config.toml agree; every server folder is registered
 
 Secret patterns adapted from eve-esa/mcp-tool-registry scripts/validate_pr.py (Apache-2.0).
 """
@@ -149,9 +150,9 @@ def check_catalog(root: Path, rep: Report) -> None:
                 rep.error(f"{where}: transports must be a non-empty subset of {sorted(TRANSPORTS)}")
         if e["type"] == "agent-skill":
             for tool in e["requires_mcp_tools"]:
-                m = re.match(r"^mcp__([a-z0-9-]+)__([A-Za-z0-9_]+)$", tool)
+                m = re.match(r"^([a-z0-9-]+)/([A-Za-z0-9_]+)$", str(tool))
                 if not m:
-                    rep.error(f"{where}: requires_mcp_tools entry '{tool}' must look like mcp__<server>__<tool>")
+                    rep.error(f"{where}: requires_mcp_tools entry '{tool}' must look like <server>/<tool>")
                     continue
                 server, name = m.groups()
                 known = server_tools.get(server)
@@ -409,6 +410,23 @@ def check_index(root: Path, rep: Report) -> None:
         rep.error("catalog/index.md is out of date; run `uv run python scripts/catalog.py index`")
 
 
+def check_clients(root: Path, rep: Report) -> None:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import client_config  # noqa: PLC0415
+
+    for problem in client_config.differences(root):
+        rep.error(f"client config: {problem}")
+    registered = set(client_config.load_mcp_json(root))
+    for d in sorted((root / "servers").iterdir()):
+        if d.is_dir() and not d.name.startswith((".", "_")) and d.name not in registered:
+            rep.error(f"servers/{d.name}: not registered in {client_config.MCP_JSON} / {client_config.CODEX_TOML} "
+                      "(scripts/new_contribution.py does this; or copy the obs-model-starter entries)")
+    for name, entry in client_config.load_mcp_json(root).items():
+        for arg in entry.get("args", []):
+            if arg.endswith("server.py") and not (root / arg).exists():
+                rep.error(f"{client_config.MCP_JSON}: server '{name}' points to missing {arg}")
+
+
 CHECKS: dict[str, Callable[[Path, Report], None]] = {
     "catalog": check_catalog,
     "files": check_files,
@@ -419,6 +437,7 @@ CHECKS: dict[str, Callable[[Path, Report], None]] = {
     "links": check_links,
     "tooltests": check_tooltests,
     "index": check_index,
+    "clients": check_clients,
 }
 
 

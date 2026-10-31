@@ -51,7 +51,7 @@ uv run python scripts/first_call.py --http http://127.0.0.1:8765/mcp   # termina
 uv run pytest servers/obs-model-starter/tests                         # tests
 ```
 
-Claude Code picks it up from the repository's [.mcp.json](../../.mcp.json); see [tutorial 00](../../tutorials/00-first-tool-call.md).
+GitHub Copilot and Claude Code start it from the repository's [.mcp.json](../../.mcp.json), Codex from [.codex/config.toml](../../.codex/config.toml); see [tutorial 00](../../tutorials/00-first-tool-call.md).
 
 ## Example
 

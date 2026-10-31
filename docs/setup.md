@@ -1,84 +1,62 @@
 # Setup
 
-This page explains every piece of free software, how to install it on each operating system, and how to check it. The short version is in [START_HERE.md](../START_HERE.md). Which combinations were actually tested is recorded in [compatibility.md](compatibility.md).
+This page explains every piece of software, how to install it on each operating system, and how to check it. The short version is in [START_HERE.md](../START_HERE.md). Which combinations were actually tested is recorded in [compatibility.md](compatibility.md).
 
 ## What you install and why
 
 | Software | Required? | Cost | What it does here |
 |---|---|---|---|
-| [uv](https://docs.astral.sh/uv/) | yes | free | Installs Python 3.13 and the exact package versions in `uv.lock`; runs scripts with `uv run` |
-| [Claude Code](https://code.claude.com/docs/en/setup) | yes | free software; needs a Claude subscription to use | The AI assistant (MCP client + agent) used in tutorials |
-| Claude subscription | yes | paid | Sign-in for Claude Code. The only paid prerequisite. |
-| [Git](https://git-scm.com/downloads) | optional | free | Only for the pull-request route. Recommended on Windows so Claude Code can use Bash. |
-| [VS Code](https://code.visualstudio.com/) + Anthropic's **Claude Code** extension | optional | free | Editor with the same Claude Code features in a side panel, same subscription |
-| [Node.js](https://nodejs.org/) | optional | free | Only for the optional MCP Inspector (`npx @modelcontextprotocol/inspector`) |
+| [VS Code](https://code.visualstudio.com/) | yes | free | Editor and home of the AI assistant |
+| [uv](https://docs.astral.sh/uv/) | yes | free | Installs Python 3.13 and the exact package versions in `uv.lock`; runs scripts with `uv run`; starts the MCP server for every assistant |
+| **One** AI assistant: GitHub Copilot, Claude Code or Codex | yes | account needed (free tiers exist for Copilot and ChatGPT/Codex) | The MCP client and agent used in tutorials |
+| [Git](https://git-scm.com/downloads) | optional | free | Only for the pull-request route. Recommended on Windows (Claude Code uses its Bash). |
+| Assistant command-line tools (`claude`, `copilot`, `codex`) | optional | free software | Same assistants in a terminal; useful for diagnostics and for organizers' automated checks |
+| [Node.js](https://nodejs.org/) | optional | free | Only for the optional MCP Inspector and for installing the Copilot/Codex CLIs with npm |
 | Docker, Jupyter | not needed | – | Never needed for the core workshop |
 
-You do **not** need Anthropic API credits, Azure OpenAI, OpenAI credits, GitHub Copilot, a cloud account or a GPU.
+You do **not** need API keys or API credits for any provider, Azure OpenAI, a cloud account or a GPU.
 
 ## Before you start
 
 - Use a normal local folder (for example `Documents/hackathon`). Avoid OneDrive, iCloud Drive, Google Drive or Dropbox folders: they try to synchronise the thousands of small files in `.venv` and can lock files while Python runs.
-- About 1 GB of free disk space (Python ≈ 100 MB, packages ≈ 60 MB, Claude Code ≈ 200 MB).
-- Administrator rights are not needed for uv or Claude Code; both install into your user folder.
-- On a managed (corporate/university) laptop, check that you may run downloaded programs and that outbound HTTPS is allowed. If a proxy intercepts TLS, see [troubleshooting](troubleshooting.md#network-proxy-and-certificates).
+- About 1 GB of free disk space.
+- Administrator rights are not needed for uv; VS Code can be installed per user.
+- On a managed (corporate/university) laptop, check that you may install VS Code extensions and that outbound HTTPS is allowed. Organization policies can disable Copilot features or the Claude/Codex integrations ([troubleshooting](troubleshooting.md#assistant-sign-in-and-usage-limits)).
 
-## Step 1 – Install uv
+## Step 1 – Install VS Code and uv
 
-| OS | Command |
-|---|---|
-| macOS, Linux | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| Windows (PowerShell) | `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 \| iex"` |
-| Alternatives | macOS: `brew install uv`; Windows: `winget install --id=astral-sh.uv -e` |
+| OS | VS Code | uv |
+|---|---|---|
+| macOS | [download](https://code.visualstudio.com/), drag to Applications | `curl -LsSf https://astral.sh/uv/install.sh \| sh` (or `brew install uv`) |
+| Windows | [download](https://code.visualstudio.com/) (User Installer) | PowerShell: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 \| iex"` (or `winget install --id=astral-sh.uv -e`) |
+| Linux | `.deb`/`.rpm`/snap from the VS Code site | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 
-Close and reopen the terminal. Check: `uv --version` prints `uv 0.x.y`.
+**Quit and restart VS Code** after installing uv. VS Code reads `PATH` when it starts; the AI assistants start the MCP server with the `uv` command, so VS Code must see it. Check in a VS Code terminal: `uv --version`.
 
-## Step 2 – Install Claude Code
-
-| OS | Command |
-|---|---|
-| macOS, Linux, WSL | `curl -fsSL https://claude.ai/install.sh \| bash` |
-| Windows (PowerShell) | `irm https://claude.ai/install.ps1 \| iex` |
-| Windows (cmd) | `curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd` |
-| Alternative | macOS: `brew install --cask claude-code` (does not auto-update) |
-
-Official requirements (checked 2026-10-30): macOS 13+, Windows 10 1809+, Ubuntu 20.04+ (or similar), 4 GB RAM. On Windows, install [Git for Windows](https://git-scm.com/downloads/win) (`winget install --id Git.Git -e`) so Claude Code can use its Bash tool; without it Claude Code falls back to PowerShell, which also works for these tutorials.
-
-Check: `claude --version` prints a version such as `2.1.185 (Claude Code)`.
-
-### Sign in with your Claude subscription
-
-1. Run `claude` in any folder.
-2. Choose the **Claude account** (subscription) login and complete it in the browser.
-3. In Claude Code, type `/status`. It should show your Claude account, not an API key.
-
-If `/status` shows an API key, an environment variable such as `ANTHROPIC_API_KEY` or a configured key helper is overriding your subscription. See [troubleshooting](troubleshooting.md#claude-sign-in-and-usage-limits).
-
-Claude plans and their Claude Code usage limits change over time. The organizer confirms before the event which plan level is sufficient (**TBD**); the exercises use short sessions.
-
-## Step 3 – Get the repository
+## Step 2 – Get the repository and open it
 
 | Route | Steps |
 |---|---|
 | No GitHub account | Download the event bundle ZIP from the organizer's link, shared drive or USB stick (**TBD**). Check its SHA-256 if given: macOS/Linux `shasum -a 256 file.zip`; Windows `Get-FileHash file.zip`. Unzip. |
 | Git | `git clone <URL TBD>` |
 
-Then `cd earth-science-mcp-hackathon`.
+In VS Code use **File → Open Folder…** and select the `earth-science-mcp-hackathon` folder **itself**. Every assistant reads its configuration from the top of the opened folder: `.mcp.json`, `.codex/config.toml`, `AGENTS.md`, `.claude/` and `.agents/`. If you open a parent folder, none of it is found.
 
-## Step 4 – Install the project
+Answer **Yes, I trust the authors** to VS Code's Workspace Trust prompt. In Restricted Mode, VS Code does not start the project's MCP servers.
+
+## Step 3 – Install the project and the skills
+
+In the VS Code terminal (**Terminal → New Terminal**):
 
 ```bash
 uv sync
-```
-
-Expected: `Installed NN packages` and a new `.venv/` folder. `uv` reads `.python-version` (3.13) and downloads that Python if your computer does not have it. Supported range: Python 3.11–3.14.
-
-Check:
-
-```bash
-uv run python --version
+uv run python scripts/install_skills.py
 uv run python scripts/first_call.py
 ```
+
+Expected: `Installed NN packages`, then `installed ... -> .claude/skills/...` and `... -> .agents/skills/...` for both skills, then `Success:`. Supported Python range: 3.11–3.14; uv downloads 3.13 if needed.
+
+The skills are copied to `.claude/skills/` (Claude Code; also read by Copilot) and `.agents/skills/` (Codex and Copilot). Copilot lists a skill once even though it is in both places.
 
 ### Alternative without uv (pip)
 
@@ -89,30 +67,48 @@ Use this only if uv cannot be installed. You need Python 3.11–3.14 from [pytho
 | macOS, Linux | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt -r requirements-dev.txt` |
 | Windows | `py -3.13 -m venv .venv; .venv\Scripts\Activate.ps1; pip install -r requirements.txt -r requirements-dev.txt` |
 
-Then replace `uv run python` with `python` in every command. The project's `.mcp.json` starts the server with `uv`; with pip, register the server for yourself instead:
+Replace `uv run python` with `python` in every command. The shared MCP configuration starts servers with `uv`, so on this route edit the `command` in [.mcp.json](../.mcp.json) and [.codex/config.toml](../.codex/config.toml) to the full path of `.venv/bin/python` (Windows: `.venv\Scripts\python.exe`) and drop `run`, `--quiet`, `python` from `args`. Do not commit that change.
 
-```bash
-claude mcp add --scope local obs-model-starter -- /full/path/to/earth-science-mcp-hackathon/.venv/bin/python servers/obs-model-starter/server.py
-```
+## Step 4 – Set up your AI assistant
 
-(Windows: `...\.venv\Scripts\python.exe`.) `requirements.txt` is exported from `uv.lock`, so both routes install the same versions.
+Choose one. You can install more than one; they share the same project files.
 
-## Step 5 – Install the skills and open Claude Code
+### GitHub Copilot
 
-```bash
-uv run python scripts/install_skills.py
-claude
-```
+1. Copilot Chat is built into current VS Code. Sign in with GitHub from the **Accounts** menu (bottom left) and follow the prompts to enable Copilot for your account (Copilot Free is offered to individuals without an organization plan).
+2. Open the Chat view (**View → Chat**). Keep the default **Copilot** session; the *Local* session type reads a different MCP file (`.vscode/mcp.json`) that this repository does not use.
+3. Copilot reads the MCP servers from `.mcp.json` in the trusted workspace. Command Palette (**Cmd/Ctrl+Shift+P**) → **MCP: List Servers** should show `obs-model-starter` and `earthdata`. Use **Show Output** on a server if it fails to start.
+4. Skills: type `/` in the chat input; `obs-model-comparison` and `earth-data-discovery` appear. Invoke with `/obs-model-comparison …`.
+5. Ask the START_HERE question. Approve the tool calls when Copilot asks.
 
-Accept the folder trust prompt and approve the two project MCP servers (`obs-model-starter`, `earthdata`). Type `/mcp` to see them connected. Type `/` and look for `obs-model-comparison` and `earth-data-discovery` in the menu to confirm the skills loaded.
+### Claude Code
 
-## Optional – VS Code with the Claude Code extension
+1. Extensions view (**Cmd/Ctrl+Shift+X**) → search **Claude Code** (publisher **Anthropic**) → Install.
+2. Open the Claude Code panel (Claude icon in the editor toolbar or activity bar, or Command Palette → "Claude Code") and sign in with your **Claude account (subscription)**. Do not choose an API/Console account.
+3. Approve the project MCP servers `obs-model-starter` and `earthdata` when asked (they are defined in `.mcp.json`). Type `/mcp` to see them connected. If they stay pending, open a terminal and run `claude` once to approve them (requires the [Claude Code CLI](https://code.claude.com/docs/en/setup): `curl -fsSL https://claude.ai/install.sh | bash`, Windows `irm https://claude.ai/install.ps1 | iex`).
+4. Skills: `/obs-model-comparison …`.
+5. Type `/status` to confirm you are using your Claude account, not an API key.
 
-1. Install VS Code.
-2. Extensions view → search **Claude Code** (publisher **Anthropic**) → Install.
-3. Open the `earth-science-mcp-hackathon` folder (File → Open Folder).
-4. Open the Claude Code panel (Claude icon in the editor toolbar or activity bar, or Command Palette → "Claude Code"); sign in with the same Claude account.
-5. The extension uses the same `.mcp.json`, `.claude/skills/` and subscription as the terminal. If a server shows as pending, run `claude` once in the integrated terminal (Terminal → New Terminal) to approve it.
+### Codex
+
+1. Extensions view → search **Codex** (publisher **OpenAI**) → Install. Open the Codex panel and **sign in with ChatGPT** (not an API key).
+2. **Trust the project once.** Codex reads `.codex/config.toml` (the MCP servers) only for trusted projects. Either:
+   - with the Codex CLI (macOS/Linux `curl -fsSL https://chatgpt.com/codex/install.sh | sh`; Windows PowerShell `powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"`; or `npm install -g @openai/codex`): run `codex` in the VS Code terminal in this folder and accept *"trust this folder"*; or
+   - add these two lines to `~/.codex/config.toml` (Windows: `%USERPROFILE%\.codex\config.toml`), using the folder's full path:
+
+     ```toml
+     [projects."/full/path/to/earth-science-mcp-hackathon"]
+     trust_level = "trusted"
+     ```
+
+   The Codex CLI and the VS Code extension share `~/.codex/config.toml`, so this is needed only once. On macOS, paths under `/tmp` resolve to `/private/tmp`: use the real path.
+3. Start a new Codex chat. Ask "Which MCP tools do you have?" The answer should list `obs-model-starter` (3 tools) and `earthdata` (7 tools). With the CLI: `codex mcp list`.
+4. Skills are read from `.agents/skills/`. Invoke with `$obs-model-comparison …` (type `$` to pick a skill).
+5. Ask the START_HERE question. Codex calls the MCP tools; approve them if asked.
+
+### Interfaces and harnesses (for the curious)
+
+VS Code 1.144 can also run Claude and Codex as *harnesses* inside its own Chat view. They use the same project files as the extensions (Claude: `.mcp.json`, `.claude/skills`; Codex: `.codex/config.toml`, `.agents/skills`). The tested combinations are listed in [compatibility.md](compatibility.md); use the extension route above unless your mentor suggests otherwise.
 
 ## Optional – MCP Inspector (visual tool tester)
 
@@ -127,11 +123,12 @@ In the Inspector choose transport **Streamable HTTP**, URL `http://127.0.0.1:876
 
 ## What the setup clinic checks
 
-| Check | Command | Pass looks like |
+| Check | How | Pass looks like |
 |---|---|---|
-| uv | `uv --version` | version printed |
-| Claude Code | `claude --version` | version printed |
+| uv | `uv --version` in a VS Code terminal | version printed |
 | Project | `uv run python scripts/first_call.py` | ends with `Success:` |
-| Skills installed | `uv run python scripts/install_skills.py --check` | `ok` for each skill |
-| Claude sign-in | `claude`, then `/status` | Claude account shown |
-| MCP in Claude | `/mcp` | both servers connected |
+| Skills installed | `uv run python scripts/install_skills.py --check` | `ok` for each skill and folder |
+| Workspace | VS Code title shows `earth-science-mcp-hackathon`; not in Restricted Mode | trusted |
+| Assistant signed in | Copilot: Accounts menu · Claude: `/status` · Codex: panel shows your ChatGPT account | personal account, not an API key |
+| MCP in the assistant | Copilot: **MCP: List Servers** · Claude: `/mcp` · Codex: "Which MCP tools do you have?" | `obs-model-starter` and `earthdata` |
+| End to end | the START_HERE question | ~23 pairs, bias ≈ −1.05 °C, RMSE ≈ 1.21 °C, MCP tools called (not a shell script) |

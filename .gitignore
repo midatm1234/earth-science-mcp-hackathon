@@ -20,6 +20,8 @@ wheelhouse/
 # Installed copies of skills (canonical source is skills/). Re-create with:
 #   uv run python scripts/install_skills.py
 .claude/skills/
+.agents/skills/
+.github/skills/
 .claude/settings.local.json
 
 # OS / editors

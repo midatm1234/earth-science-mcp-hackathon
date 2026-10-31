@@ -8,6 +8,8 @@ Creates (and never overwrites):
     catalog/entries/<server>.yaml     status: draft
     catalog/entries/<skill>.yaml      status: draft
     submissions/<team>/               discovery-record.md, submission.md, demo.md
+and registers the new server in .mcp.json (Claude Code, Copilot) and
+.codex/config.toml (Codex), so every supported assistant can start it.
 
 Use --server only, or --skill only with --uses-server, to create one artifact.
 """
@@ -20,6 +22,8 @@ import shutil
 import sys
 from datetime import date
 from pathlib import Path
+
+import client_config
 
 REPO = Path(__file__).resolve().parents[1]
 TEMPLATES = REPO / "templates"
@@ -95,6 +99,7 @@ def main(argv: list[str] | None = None) -> int:
             _fill((TEMPLATES / "mcp-server" / "catalog-entry.yaml").read_text(encoding="utf-8"), values),
             encoding="utf-8", newline="\n")
         created += [f"servers/{args.server}/", f"catalog/entries/{args.server}.yaml"]
+        created += [f"{f} (registered {args.server})" for f in client_config.register_stdio_server(root, args.server)]
 
     if args.skill:
         dst = root / "skills" / args.skill
@@ -121,6 +126,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  uv run pytest servers/{args.server}/tests        # template tests should pass now")
     if args.skill:
         print(f"  uv run python scripts/install_skills.py {args.skill}")
+    if args.server:
+        print("  Start a new session in your AI assistant so it starts the new server")
     print("  uv run python scripts/catalog.py index")
     print("  uv run python scripts/check_all.py")
     print(f"  Fill in submissions/{args.team}/discovery-record.md before changing the code.")

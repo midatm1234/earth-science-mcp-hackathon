@@ -13,7 +13,7 @@ Nothing in this repository deploys on merge. The only workflow, [.github/workflo
 ## Architecture
 
 ```text
-client (Claude Code, MCP Inspector, scripts)
+client (Copilot, Claude Code, Codex, MCP Inspector, scripts)
    │ HTTPS  (Streamable HTTP, POST /mcp/<server-id>)
    ▼
 reverse proxy / gateway  ── TLS, auth, rate limits, request size limits, access logs
@@ -32,14 +32,14 @@ One container per contribution, built from the frozen reference (commit SHA or a
 | URL scheme | `https://<host TBD>/mcp/<server-id>` – one path per catalog id |
 | Transport | Streamable HTTP only, stateless (`stateless_http=True`), JSON responses |
 | Server start | `python server.py --transport http --host 0.0.0.0 --port 8000` inside the container (laptops keep `127.0.0.1`) |
-| Client config | `claude mcp add --transport http <server-id> https://<host>/mcp/<server-id>`; `.env.example` reserves `HACKATHON_SHARED_MCP_URL` |
+| Client config | an `http` entry with the URL in `.mcp.json` (`"type": "http", "url": ...`) and `.codex/config.toml` (`url = ...`), like `earthdata`; `.env.example` reserves `HACKATHON_SHARED_MCP_URL` |
 | Health | `GET /healthz` on the gateway; per-server readiness = successful `tools/list` |
 
 ## Authentication
 
 | Option | When | Notes |
 |---|---|---|
-| Event bearer tokens (one per participant or team) | Event week | Issued by organizer; sent as `Authorization: Bearer ...` via `claude mcp add --header`; revoked after the event |
+| Event bearer tokens (one per participant or team) | Event week | Issued by organizer; sent as an `Authorization` header configured per client (Claude Code `--header`, Copilot `headers`, Codex `bearer_token_env_var`); revoked after the event |
 | OAuth 2.1 per the MCP authorization specification | Long-term public service | Requires an identity provider; more setup |
 | No auth, IP allow-list | Venue-only network | Only for servers with no external calls and no costs |
 
@@ -86,8 +86,8 @@ For stdio servers on a laptop, writing to a local path is acceptable because cli
 
 ## Client reachability
 
-- Claude Code on a laptop can reach the shared server if the laptop can reach its URL (venue network or internet).
-- Claude web remote connectors connect from Anthropic's infrastructure: the endpoint must be publicly reachable over HTTPS with a valid certificate. A venue-only or `127.0.0.1` endpoint will not work there.
+- Copilot, Claude Code or Codex on a laptop can reach the shared server if the laptop can reach its URL (venue network or internet).
+- Web chat remote connectors (e.g. claude.ai, ChatGPT) connect from the provider's infrastructure: the endpoint must be publicly reachable over HTTPS with a valid certificate. A venue-only or `127.0.0.1` endpoint will not work there.
 - Hosting a server does not install any skill; participants still install skills locally with `install_skills.py`.
 
 ## Promotion procedure (when enabled)

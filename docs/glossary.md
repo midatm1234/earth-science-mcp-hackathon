@@ -4,7 +4,9 @@
 |---|---|
 | **Agent** | A language model that decides which tools to call, reads the results and repeats until it can answer. |
 | **Agent skill** | A folder containing `SKILL.md` (YAML frontmatter with `name` and `description`, then instructions) and optional `scripts/`, `references/`, `assets/`. Loaded by the agent when relevant or when invoked as `/name`. Format: [agentskills.io](https://agentskills.io/specification). |
-| **AI application / host** | The program you interact with that runs the model and agent loop, e.g. Claude Code. |
+| **AI application / host** | The program you interact with that runs the model and agent loop, e.g. GitHub Copilot, Claude Code or Codex. |
+| **AI assistant** | In this repository: GitHub Copilot (built into VS Code), Claude Code (Anthropic extension) or Codex (OpenAI extension). Any one is enough. |
+| **Harness** | VS Code's name for the engine that runs an agent session (Copilot, Claude, Codex or Local). Each reads its own configuration files. |
 | **Alignment (time)** | Matching values from two datasets to the same time period before comparing them. Here: calendar month. |
 | **Bias (mean bias)** | Average of (model − observation). Negative means the model is lower. |
 | **Catalog** | This repository's list of MCP servers and skills: [catalog/](../catalog/). |
@@ -40,6 +42,7 @@
 | **Structured output** | A tool result as JSON fields (e.g. `n_valid_pairs`) rather than free text. |
 | **Synthetic data** | Invented values for teaching or testing. Never presented as observations or model output. |
 | **Tool** | A function exposed by an MCP server, with a name, description, input schema and result. |
+| **Trust (workspace / project)** | Permission for tools to read a folder's configuration and run its MCP servers: VS Code Workspace Trust (Copilot, Claude Code), Codex project trust, Claude Code project-server approval. |
 | **Transport** | How MCP messages travel: stdio or Streamable HTTP. |
 | **uv** | A fast Python package and project manager that also installs Python. |
 | **WKT** | Well-Known Text geometry, e.g. `POLYGON((lon lat, ...))`. Earthdata MCP expects **longitude first**. |

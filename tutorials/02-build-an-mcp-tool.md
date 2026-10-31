@@ -102,18 +102,20 @@ uv run python scripts/check_all.py --fast
 
 Update the tool list in `catalog/entries/<server>.yaml` and run `uv run python scripts/catalog.py index`.
 
-## Step 5 – Try it with Claude (10 minutes)
+## Step 5 – Try it with your AI assistant (10 minutes)
 
-Restart Claude Code (servers are started when a session begins), then:
+Start a new chat/session (assistants start MCP servers when a session begins; in VS Code you can also use **MCP: List Servers** → Restart), then:
 
 ```text
 Which season has the largest model A bias at SYN-MOUNTAIN?
 ```
 
-Expected: a call to `seasonal_bias` and an answer with per-season bias in °C and pair counts. For a new server, register it first:
+Expected: a call to `seasonal_bias` and an answer with per-season bias in °C and pair counts.
+
+A new server created with `scripts/new_contribution.py` is already registered for all assistants (in `.mcp.json` and `.codex/config.toml`). If you created the folder by hand, register it:
 
 ```bash
-claude mcp add --scope local <server-name> -- uv run --quiet python servers/<server-name>/server.py
+uv run python scripts/client_config.py register <server-name>
 ```
 
 Over HTTP for a second client: `uv run python servers/<server-name>/server.py --transport http` (template port 8766).
@@ -136,8 +138,8 @@ Make one invalid input produce a helpful error, e.g. `start` after `end`, or an 
 | Symptom | Cause | Fix |
 |---|---|---|
 | `ModuleNotFoundError: science` in tests | `tests/conftest.py` missing | Copy it from the template |
-| Claude does not see the new tool | Session started before the change | Exit and restart `claude`; check `/mcp` |
-| Server fails only in Claude, works in pytest | Something prints to stdout | Use `log.info(...)`; never `print()` |
+| Assistant does not see the new tool | Session started before the change | New chat/session; Copilot: **MCP: List Servers** → Restart; Claude Code: `/mcp`; Codex: new chat |
+| Server fails only in the assistant, works in pytest | Something prints to stdout | Use `log.info(...)`; never `print()` |
 | `Input validation error` | Wrong argument type | Check the schema with `first_call.py`-style client or the Inspector |
 | Validator: "pin an exact version" | Added a dependency without `==` | `uv add package==X.Y.Z`; update `requirements.txt` to match |
 | Tool returns huge output | Returning raw data | Summarise; return counts, statistics, ids, URLs |

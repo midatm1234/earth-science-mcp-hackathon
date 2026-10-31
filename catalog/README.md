@@ -26,9 +26,9 @@ One YAML file per artifact in [entries/](entries/); peer-test reports in [peer-t
 | `credentials` | yes | `none`, or each account/key needed and how to obtain it (never the value) |
 | `network` | yes | `none` or which services are called |
 | `dependencies` | yes | Python range and pinned packages |
-| `client_name` | servers | Name used in `.mcp.json`; tools appear as `mcp__<client_name>__<tool>` |
+| `client_name` | servers | Server name used in `.mcp.json` and `.codex/config.toml` |
 | `tools` | servers | Tool names offered |
-| `requires_mcp_tools` | skills | Exact `mcp__<client_name>__<tool>` names the skill needs (validated against server entries) |
+| `requires_mcp_tools` | skills | `<client_name>/<tool>` for each MCP tool the skill needs (validated against server entries). Each assistant adds its own prefix when it shows the tool. |
 | `transports` | servers | `stdio`, `streamable-http` |
 | `install`, `run` | yes | Exact commands |
 | `runtime` | yes | Typical time per call or per agent task |

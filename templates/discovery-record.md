@@ -6,7 +6,7 @@ Complete this **before** writing code. Both checks (A and B) are required. Mento
 |---|---|
 | Team | |
 | Date checked | YYYY-MM-DD |
-| Completed with | Claude Code + `earth-data-discovery` skill / plain MCP client (`scripts/earthdata_probe.py`) / manual |
+| Completed with | AI assistant (Copilot / Claude Code / Codex) + `earth-data-discovery` skill / plain MCP client (`scripts/earthdata_probe.py`) / manual |
 
 ## 1. Scientific question
 

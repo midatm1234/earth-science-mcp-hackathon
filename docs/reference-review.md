@@ -58,6 +58,17 @@ Review date: **2026-10-30**. Reviewer: organizer preparation for Hugo Kyo Lee. A
 
 Used as the **optional advanced case study** only ([challenge card A1](challenge-cards.md#a1--spatial-dependence-and-separation-buffers--optional)). Not embedded in the starter: 13.6 MB of base64 imagery, rasterio/scipy/CNN training dependencies, and EVE credentials would break the "small, credential-free, laptop" requirement. Its demonstration structure informed [templates/demo.md](../templates/demo.md). The Team 3 slides were not available and are listed as pending.
 
+## Scope change: three assistants (2026-10-30)
+
+The original brief made a Claude subscription the only paid prerequisite and did not require GitHub Copilot. At the organizer's request the event now supports **GitHub Copilot, Claude Code or Codex in VS Code**; participants need one of them. Sources checked for this change:
+
+| Source | What was used |
+|---|---|
+| [VS Code: Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills), [MCP configuration reference](https://code.visualstudio.com/docs/agents/reference/mcp-configuration), [Manage MCP servers](https://code.visualstudio.com/docs/agents/run/manage-mcp-servers), [Agent harnesses](https://code.visualstudio.com/docs/agents/run/agent-harnesses) | Copilot harness reads workspace `.mcp.json` (portable `mcpServers` format, no working-directory option) under Workspace Trust; skills from `.github/`, `.claude/`, `.agents/skills`; `.vscode/mcp.json` is the Local-harness format |
+| [Codex: MCP](https://developers.openai.com/codex/mcp), [Skills](https://developers.openai.com/codex/skills), [CLI](https://developers.openai.com/codex/cli), [Pricing](https://developers.openai.com/codex/pricing) | `.codex/config.toml` for trusted projects; skills in `.agents/skills`; `$name` invocation; Codex included in ChatGPT Free and paid plans |
+| [GitHub Copilot plans](https://docs.github.com/en/copilot/get-started/plans) | Copilot Free for individuals without an organization plan |
+| Copilot CLI 1.0.105 `copilot mcp --help` | Workspace config from `.mcp.json` or `.github/mcp.json`; folder trust required |
+
 ## Version selection (checked 2026-10-30)
 
 | Component | Selected | Notes |
@@ -66,7 +77,9 @@ Used as the **optional advanced case study** only ([challenge card A1](challenge
 | MCP SDK | `mcp==2.3.0` | Latest stable; SDK supports protocol versions back to 2025; Earthdata server negotiated `2025-11-25` |
 | Standalone FastMCP | not used | Earthdata uses `fastmcp` 3.x, latest is 4.1.4; one SDK keeps the dependency set small |
 | uv | 0.13.6 used to lock | Lock file `uv.lock`; `requirements.txt` exported from it |
-| Claude Code | 2.1.185 tested | Skills in `.claude/skills/<name>/SKILL.md`; project MCP servers in `.mcp.json` need approval |
+| Claude Code | CLI 2.1.185; VS Code extension 2.1.314 present | Skills in `.claude/skills/<name>/SKILL.md`; project MCP servers in `.mcp.json` need approval |
+| GitHub Copilot | VS Code 1.144.0 built-in chat; Copilot CLI 1.0.105 tested | `.mcp.json`; skills in `.claude/.agents/.github` |
+| Codex | VS Code extension 26.51021.22027 with bundled codex-cli 0.164.0-alpha.11.1 tested | `.codex/config.toml`; `.agents/skills` |
 
 ## Unresolved reuse decisions
 

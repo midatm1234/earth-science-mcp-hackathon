@@ -28,6 +28,7 @@ Names: 3–40 characters, lowercase letters and digits separated by single hyphe
 | `servers/<server>/README.md` | Purpose, tools, scientific conventions, run commands, example input/output, limitations |
 | `servers/<server>/data/README.md` | If data are bundled: provenance, class (synthetic/cached/real), license, ≤ 1 MB per file |
 | `skills/<skill>/SKILL.md` | Valid frontmatter; sections When to use, When not to use, Required tools, Procedure, Expected output, Assumptions, Limitations, Example tasks |
+| `.mcp.json` and `.codex/config.toml` entries | Registers the server for Copilot, Claude Code and Codex (done by `new_contribution.py`; `client_config.py register <name>` otherwise) |
 | `catalog/entries/<server>.yaml`, `catalog/entries/<skill>.yaml` | All fields ([catalog/README.md](catalog/README.md)) |
 | `submissions/<team>/discovery-record.md` | Both discovery checks and the decision |
 | `submissions/<team>/submission.md` | Checklist and verification evidence |
@@ -39,7 +40,7 @@ Extending `obs-model-starter` instead of creating a server: edit its files, add 
 - **No credentials** in any file, test, fixture or image. Read secrets from environment variables; describe them in the catalog entry. `.env` is never committed.
 - **No large data.** ≤ 1 MB per fixture, ≤ 5 MB per file. Link to sources; generate synthetic stand-ins when redistribution is unclear.
 - **Dependencies** must be pinned, added to `pyproject.toml` (`uv add pkg==X.Y.Z`) and locked (`uv lock`). Prefer the standard library.
-- **Automated checks must not need** Claude, LLM credentials, paid APIs or network access. Live checks go in scripts that are run manually and recorded.
+- **Automated checks must not need** an AI assistant, LLM credentials, paid APIs or network access. Live checks go in scripts that are run manually and recorded.
 - **Scientific quality:** state units, coordinate conventions, spatial and temporal support, dataset/model version, missing-data handling, processing choices, provenance and interpretation limits ([checklist](docs/challenge-cards.md#scientific-quality-checklist)).
 - **Labels:** distinguish synthetic data, cached responses, recorded demonstrations and live calls everywhere.
 - **Licenses:** contributions default to Apache-2.0 for code. Reuse only material whose license allows it, and record attribution.

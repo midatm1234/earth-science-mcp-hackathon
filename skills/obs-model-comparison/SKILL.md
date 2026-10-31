@@ -2,7 +2,7 @@
 name: obs-model-comparison
 description: Compares monthly model output with observations at a site using the obs-model-starter MCP tools, after checking units, time-stamp conventions, missing data and provenance, then explains bias and RMSE with limitations. Use when the user asks how well a model matches observations, wants model bias or RMSE at a station or site, or asks to evaluate or validate a model run against measurements from the sample datasets.
 license: Apache-2.0
-compatibility: Requires the obs-model-starter MCP server (servers/obs-model-starter) connected to the client. Tested with Claude Code; see docs/compatibility.md.
+compatibility: Requires the obs-model-starter MCP server (servers/obs-model-starter) connected to the client. Written for Claude Code, GitHub Copilot and Codex; docs/compatibility.md records what was tested.
 allowed-tools: mcp__obs-model-starter__list_datasets mcp__obs-model-starter__describe_dataset mcp__obs-model-starter__compare_model_to_obs
 metadata:
   version: "0.1.0"
@@ -28,13 +28,17 @@ Guide a careful, reproducible comparison of a model run against observations usi
 
 ## Required tools
 
-| Tool (Claude Code name) | Use |
-|---|---|
-| `mcp__obs-model-starter__list_datasets` | find dataset ids and which are observations or models |
-| `mcp__obs-model-starter__describe_dataset` | check units, time convention, sites, missing values, QC, provenance |
-| `mcp__obs-model-starter__compare_model_to_obs` | compute aligned bias and RMSE |
+From the MCP server **`obs-model-starter`**:
 
-If these tools are not available, stop and tell the user: "The obs-model-starter MCP server is not connected. Run `/mcp` to check it, or see tutorials/00-first-tool-call.md." Do not fall back to guessing.
+| Tool | Use |
+|---|---|
+| `list_datasets` | find dataset ids and which are observations or models |
+| `describe_dataset` | check units, time convention, sites, missing values, QC, provenance |
+| `compare_model_to_obs` | compute aligned bias and RMSE |
+
+Each assistant shows these with its own prefix, for example `mcp__obs-model-starter__compare_model_to_obs` (Claude Code), `obs-model-starter-compare_model_to_obs` (GitHub Copilot) or `mcp__obs_model_starter__compare_model_to_obs` (Codex). The `allowed-tools` header above uses Claude Code names; other assistants ignore it.
+
+If these tools are not available, stop and tell the user: "The obs-model-starter MCP server is not connected. Check the MCP server list in your assistant, or see tutorials/00-first-tool-call.md." Do not fall back to guessing, and do not run the server's scripts through a shell instead.
 
 ## Procedure
 
@@ -77,7 +81,7 @@ Sign convention: a negative bias means the model is colder (lower) than the obse
 
 ## Example tasks
 
-- `/obs-model-comparison` Compare model A with the station observations at SYN-VALLEY.
+- `/obs-model-comparison` (Claude Code, Copilot) or `$obs-model-comparison` (Codex): Compare model A with the station observations at SYN-VALLEY.
 - "Which of the two model runs is closer to the observations at the mountain site in 2021?"
 - "What is the RMSE of model B at the coastal site if suspect observations are included?" (set `include_suspect=true` and highlight the change)
 - Boundary case: "Compare model A at SYN-VALLEY for 2022." → the tool reports no rows; explain that the data cover 2020-01 to 2021-12.

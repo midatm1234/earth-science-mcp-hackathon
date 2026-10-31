@@ -26,7 +26,7 @@ dependencies:
   python: none (remote service)
   packages: []
 requires_mcp_tools: []
-client_name: earthdata   # server name in .mcp.json; tools appear as mcp__earthdata__<tool>
+client_name: earthdata   # server name in .mcp.json and .codex/config.toml
 tools:
   - get_keywords
   - get_collections

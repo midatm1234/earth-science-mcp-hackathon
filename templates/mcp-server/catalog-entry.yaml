@@ -24,7 +24,7 @@ dependencies:
   python: ">=3.11,<3.15"
   packages: ["mcp==2.3.0"]
 requires_mcp_tools: []
-client_name: __SERVER_NAME__
+client_name: __SERVER_NAME__   # server name in .mcp.json and .codex/config.toml
 tools:
   - summarize_values
 transports: [stdio, streamable-http]

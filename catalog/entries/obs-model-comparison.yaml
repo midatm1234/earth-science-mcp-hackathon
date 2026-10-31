@@ -26,14 +26,16 @@ dependencies:
   python: ">=3.11,<3.15"
   packages: []
 requires_mcp_tools:
-  - mcp__obs-model-starter__list_datasets
-  - mcp__obs-model-starter__describe_dataset
-  - mcp__obs-model-starter__compare_model_to_obs
+  - obs-model-starter/list_datasets
+  - obs-model-starter/describe_dataset
+  - obs-model-starter/compare_model_to_obs
 tools: []
 transports: []
 install: uv run python scripts/install_skills.py obs-model-comparison
 run:
+  copilot: /obs-model-comparison Compare model A with the station observations at SYN-VALLEY.
   claude-code: /obs-model-comparison Compare model A with the station observations at SYN-VALLEY.
+  codex: $obs-model-comparison Compare model A with the station observations at SYN-VALLEY.
 runtime: about 1 minute of agent time
 example:
   prompt: How well does model run B match the station observations at the mountain site in 2021?
@@ -41,7 +43,7 @@ example:
     One-sentence result, table of n pairs / mean bias / RMSE in degC, unit conversion and
     excluded months, provenance stating the data are synthetic, limitations, tool trace.
 tests:
-  command: uv run python scripts/verify_claude_workflow.py --only explicit --only natural --only negative
+  command: uv run python scripts/verify_agent_workflow.py --client <claude|copilot|codex> --only explicit --only natural --only negative
   evidence: docs/validation-report.md
 status:
   review: accepted
@@ -49,10 +51,12 @@ status:
     result: partial
     date: "2026-10-30"
     by: organizer preparation
-    platform: macOS 27.0.1 arm64, Claude Code 2.1.185
+    platform: >-
+      macOS 27.0.1 arm64; GitHub Copilot CLI 1.0.105; Codex CLI 0.164.0-alpha.11.1 (bundled in the
+      OpenAI VS Code extension 26.51021.22027); Claude Code 2.1.185
     evidence: >-
-      docs/validation-report.md - SKILL.md validated and discovered by Claude Code; model-driven
-      invocation pending a Claude subscription session.
+      docs/validation-report.md - mcp/explicit/natural/negative pass with Copilot and Codex; Claude Code
+      connects the servers and lists the skill, model-driven checks pending (no reachable Claude account).
   peer_testing: []
   hosting:
     status: not-applicable

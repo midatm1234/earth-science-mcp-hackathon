@@ -1,0 +1,13 @@
+# Codex project configuration (Codex CLI and the OpenAI Codex extension for VS Code).
+# Codex reads this file only after you trust the project folder (Codex asks on first use).
+# Keep servers identical to .mcp.json (used by Claude Code and GitHub Copilot);
+# scripts/validate_repo.py checks that the two files agree.
+
+[mcp_servers.obs-model-starter]
+command = "uv"
+args = ["run", "--quiet", "python", "servers/obs-model-starter/server.py", "--transport", "stdio"]
+startup_timeout_sec = 60
+
+[mcp_servers.earthdata]
+url = "https://cmr.earthdata.nasa.gov/mcp/v1"
+tool_timeout_sec = 90

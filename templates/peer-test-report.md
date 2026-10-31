@@ -14,9 +14,9 @@ Independent reproduction by a team (or mentor) that did **not** author the artif
 | Date and start time | |
 | OS and version | |
 | Python version | `uv run python --version` |
-| Claude Code version | `claude --version` |
+| AI assistant and version | Copilot / Claude Code / Codex, version (extension or CLI) |
 | Execution mode | stdio local / Streamable HTTP local / hosted endpoint (URL) |
-| Clean session? | new terminal + new Claude Code session, common dependencies preinstalled: yes / no |
+| Clean session? | new terminal + new assistant chat/session, common dependencies preinstalled: yes / no |
 | Setup time (minutes) | from receiving the package to first successful tool call |
 
 ## 2. Checks
@@ -34,7 +34,7 @@ Status: **pass** (works as documented), **partial** (works with a documented dev
 | 7 | Provenance stated (source, version, synthetic/cached/live) | | | | |
 | 8 | Limitations stated and sensible | | | | |
 
-If Claude usage limits or network problems interrupt the session, continue checks 1, 2, 4, 5 with a plain MCP client (`scripts/first_call.py` pattern or MCP Inspector) and mark checks 3 and any agent-dependent part **blocked** until completed.
+If assistant usage limits or network problems interrupt the session, continue checks 1, 2, 4, 5 with a plain MCP client (`scripts/first_call.py` pattern or MCP Inspector) and mark checks 3 and any agent-dependent part **blocked** until completed.
 
 ## 3. Failures reported to authors
 

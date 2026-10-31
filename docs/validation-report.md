@@ -10,7 +10,10 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 | uv | 0.13.6 |
 | Python | 3.13.18, 3.11.18, 3.12.16, 3.14.10 (uv-managed); 3.13.12, 3.14.3 (Homebrew) |
 | MCP SDK | `mcp==2.3.0` (lock: `uv.lock`, 39 packages) |
-| Claude Code | 2.1.185, authenticated through an institutional API key helper (**not** a Claude subscription); its API gateway was unreachable from the test network |
+| VS Code | 1.144.0, with Copilot Chat (built in), Claude Code extension 2.1.314, OpenAI Codex extension 26.51021.22027 |
+| GitHub Copilot | Copilot CLI 1.0.105 (npm `@github/copilot`), GitHub sign-in; model claude-sonnet-5.5 routed by Copilot |
+| Codex | codex-cli 0.164.0-alpha.11.1 bundled in the Codex VS Code extension, ChatGPT sign-in |
+| Claude Code | CLI 2.1.185, authenticated through an institutional API key helper (**not** a Claude subscription); its API gateway was unreachable from the test network |
 | Network | Internet available; `cmr.earthdata.nasa.gov` reachable |
 
 ## Results
@@ -34,7 +37,14 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 | 15 | Skill installation | `install_skills.py`, `--check`, `--remove`, drift detection (tooling tests) | **pass** |
 | 16 | Claude Code reads MCP config | `claude mcp list` → both project servers listed as *pending approval* (expected for `.mcp.json`) | **pass** |
 | 17 | Claude Code connects MCP servers and discovers skills | `claude -p … --mcp-config <config> --output-format stream-json` session init, 4 consecutive sessions | **pass** – `obs-model-starter` and `earthdata` connected; `obs-model-comparison` and `earth-data-discovery` listed |
-| 18 | Model-driven tool call, skill invocation (explicit, natural trigger, should-not-apply), combined workflow | `uv run python scripts/verify_claude_workflow.py` | **pending** – every run stopped at `API Error: Unable to connect to API (ConnectionRefused)`; the configured gateway is unreachable and is not a subscription. No model output was produced, so nothing is claimed. |
+| 18a | **GitHub Copilot**: real MCP call, explicit skill, natural trigger, should-not-apply, combined Earthdata workflow | `uv run python scripts/verify_agent_workflow.py --client copilot` (clean clone `/tmp/esmh`) | **pass 5/5** – MCP calls `obs-model-starter/compare_model_to_obs` etc.; `skill` tool invoked for `obs-model-comparison`; negative case called no tools; combined called `earthdata/get_collections`, `get_granules`, `get_variables` |
+| 18b | **Codex**: same five checks | `CODEX_HOME=<trusted> uv run python scripts/verify_agent_workflow.py --client codex` | **pass 5/5** (explicit first failed only because the answer said "July 2020" instead of "2020-07"; the check was widened and re-run: pass) |
+| 18c | **Claude Code**: same checks | `uv run python scripts/verify_agent_workflow.py --client claude --only mcp --only explicit` | **blocked** – both MCP servers `connected`, skills listed; every request ended `API Error: Unable to connect to API (ConnectionRefused)`. Nothing claimed. |
+| 18d | Copilot without folder trust | `copilot -p … --allow-all-tools` (no `--trust-folder`) | MCP servers **not** loaded; the model ran `scripts/first_call.py` via the shell and reported correct numbers. Documented as a failure mode: correct numbers are not proof of MCP use |
+| 18e | Codex without project trust | `codex exec` with trust only as a `-c` override | `.codex/config.toml` **ignored**; trust must be recorded in `~/.codex/config.toml` (what Codex's trust prompt writes) |
+| 18f | Team scaffold reaches every assistant | `new_contribution.py --server river-flow-tools …` then a `summarize_values` request via Copilot and Codex | **pass** – both made the MCP call (n_valid 2, mean 3 mm/day) with no manual configuration |
+| 18h | Both engines from the **unzipped event bundle** (no `.git`), fresh `uv sync` | `verify_agent_workflow.py --client copilot` and `--client codex` in `/tmp/bundletest` | **pass 5/5 each**. Found: `codex exec` refuses non-Git folders unless `--skip-git-repo-check` (verifier fixed; troubleshooting updated). Untrusted non-Git folder: Codex loads skills but **not** MCP servers |
+| 18g | Copilot skill de-duplication | skills in both `.claude/skills` and `.agents/skills` | **pass** – Copilot lists each skill once |
 | 19 | Earthdata MCP live | `uv run python scripts/earthdata_probe.py --list-tools`; MERRA-2 M2TMNXSLV discovery | **pass** (live, 2026-10-31T04:18:59Z) – 7 tools; collection `C1276812859-GES_DISC`; 12 granules for 2020 in the polygon; `T2M` in K; Harmony/OPeNDAP services. Saved as a dated cached response. |
 | 20 | Catalog validation | `validate_repo.py --only catalog --only index`; negative tests (fake hosted endpoint, bad peer result, unknown required tool) | **pass** |
 | 21 | Relative documentation links and anchors | `validate_repo.py --only links` (all `.md` files) | **pass** – 0 broken links or anchors |
@@ -42,6 +52,7 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 | 23 | Tutorial 02 worked example | code blocks from the tutorial applied verbatim to a clean copy; tests added | **pass** – 20 tests; per-season bias returned |
 | 24 | Submission and peer-testing flow | `/tmp/author`: scaffold → fill → `check_all` → `package.py contribution`; `/tmp/reviewer`: fresh bundle → `package.py verify` → unzip → `install_skills.py` → server tests → validator | **pass** after fixes found by this test (test-name collision; per-artifact manifest names) |
 | 25 | Distribution bundle | `package.py bundle`; `package.py verify` | **pass** – 92 files, ~0.7 MB, deterministic archive with SHA-256 manifest |
+| 27 | Client config consistency | `scripts/client_config.py check`; validator `clients`; negative tests (mismatched args, unregistered server) | **pass** |
 | 26 | GitHub Actions | `.github/workflows/checks.yml` | **pending** – YAML parses and its commands pass locally; never run on GitHub (no remote) |
 
 ## Defects found and fixed during validation
@@ -57,14 +68,24 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 | reviewer dry run | `MANIFEST.json` from two packages overwrote each other at repo root | `<id>-<version>.MANIFEST.json`, git-ignored |
 | Claude session debug log | intermittent `ImportError` in the server under Claude Code | cause: a globally exported `UV_PROJECT_ENVIRONMENT` was inherited by Claude Code's key helper, which synced a different project into the same venv. Test-setup artifact; documented in [troubleshooting](troubleshooting.md#mcp-server-not-connected) |
 
+## Defects found in the three-assistant review
+
+| Found by | Defect | Fix |
+|---|---|---|
+| Copilot CLI run | Without folder trust, `.mcp.json` is ignored and the agent "succeeds" by running scripts in a shell | START_HERE, setup and troubleshooting say to open the folder itself and trust it; verifier denies the shell tool for Copilot and requires real MCP calls |
+| Codex run | `.codex/config.toml` did not exist; Codex had no MCP servers | added `.codex/config.toml`, validated against `.mcp.json` |
+| Codex run | Codex reads skills from `.agents/skills`, not `.claude/skills` | installer writes both folders (`--client` to choose) |
+| Skill review | skills named tools by Claude-only prefixes and referred to `/mcp`, `Grep` | client-neutral wording; catalog uses `<server>/<tool>` |
+| Scaffold review | new team servers were registered for no assistant | `new_contribution.py` and `client_config.py register` write both config files; validator requires it |
+
 ## Remaining manual checks (precise)
 
 | # | Check | Who / how | Blocks |
 |---|---|---|---|
-| P1 | Claude **subscription** sign-in; `/status` shows the Claude account | organizer, rehearsal | participant path step 5 |
-| P2 | `uv run python scripts/verify_claude_workflow.py` passes all five checks (MCP tool access, explicit, natural, negative, combined) with a subscription account; paste the printed summary here | organizer, rehearsal | skill catalog entries move from `partial` to `pass` |
+| P1 | Claude Code with a **Claude subscription**: `/status`, then `uv run python scripts/verify_agent_workflow.py --client claude` (five checks) | organizer, rehearsal | Claude Code column of compatibility |
+| P2 | **VS Code GUI** walk-through of START_HERE step 5 with each assistant (Copilot Chat view, Claude Code panel, Codex panel), including the Workspace Trust and Codex trust prompts | organizer, rehearsal | GUI claims (engines are tested) |
 | P3 | Windows 10/11 and Linux: START_HERE steps 1–5 and `check_all.py` | mentor laptops, or CI after push | compatibility rows |
-| P4 | VS Code + Claude Code extension shows the same servers and skills | organizer | optional interface |
+| P4 | Copilot **Free** and ChatGPT **Free** accounts complete the tutorials within their limits | organizer | plan guidance (TBD) |
 | P5 | GitHub Actions run green on all five matrix jobs | after the repository destination is decided | CI claim |
 | P6 | MCP Inspector against the HTTP server | optional | – |
 | P7 | Independent peer test of the starter by a non-author | mentor | catalog `peer_testing` (currently empty) |
@@ -77,9 +98,10 @@ Prepared 2026-10-30 (local time, UTC−7) during organizer preparation. Every ro
 |---|---|
 | Laptop core path without AI (setup, first call, both transports, tests, scaffold, packaging) | **Ready** on macOS arm64; untested on Windows/Linux |
 | Scientific starter and tests | **Ready** |
-| Skills (format, install) | **Ready**; agent behaviour **unverified** (P2) |
-| Claude Code integration | Client side **verified**; model-driven behaviour **pending** (P1, P2) |
-| Discovery with Earthdata MCP | **Ready** (live verified; cached fallback) |
-| Documentation and tutorials | **Complete**; links verified; worked examples executed |
+| GitHub Copilot | **Engine verified** (5/5 checks, scaffolded server); VS Code GUI walk-through pending (P2) |
+| Codex | **Engine verified** (5/5, binary from the VS Code extension); project-trust step must be done once per laptop; GUI walk-through pending (P2) |
+| Claude Code | Client side verified (servers connect, skills listed); model-driven checks **pending** (P1) |
+| Discovery with Earthdata MCP | **Ready** (live verified through Copilot and Codex; cached fallback) |
+| Documentation and tutorials | **Complete** for all three assistants; links verified |
 | Submission, catalog, peer-testing workflow | **Ready** (dry run passed) |
 | Remote repository, CI, hosting | **TBD** by organizer |

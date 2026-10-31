@@ -26,6 +26,10 @@ Mentors confirm, for every contribution, before minute 0:
 
 Any unchecked item is recorded in the peer-test report as the starting state; it is not fixed by extending development into the block.
 
+## Cross-assistant coverage
+
+Where teams use different assistants, assign reviewers so each contribution is tested with at least one assistant its authors did **not** use. Record the assistant in the report. A skill that works in one assistant and fails in another is a *partial*, with the failing assistant named.
+
 ## Assignment
 
 Number teams 1…N in random order. Team *i* reviews team *(i+1) mod N* in round 1 and team *(i+2) mod N* in round 2, so no team reviews itself and every contribution is reviewed twice (with N ≥ 3).
@@ -43,8 +47,8 @@ Authors may answer questions only through what is written in their README and su
 Reviewers test in a **clean project or session** with the event's common dependencies already installed:
 
 - a fresh copy of the event bundle (or a clean checkout of the frozen commit), already `uv sync`ed;
-- a new terminal and a new Claude Code session started in that folder;
-- the contribution added only through its documented steps (unzip, `install_skills.py`, `claude mcp add` or `.mcp.json`).
+- a new terminal and a new chat/session of the reviewer's AI assistant (Copilot, Claude Code or Codex) in that folder;
+- the contribution added only through its documented steps (unzip, `install_skills.py`, `client_config.py register`).
 
 ## What reviewers must do
 
@@ -58,7 +62,7 @@ Reviewers test in a **clean project or session** with the event's common depende
 
 ## What to record
 
-Artifact version and frozen reference; author team and reviewer team; OS, Claude Code version and Python version; execution mode (stdio local, HTTP local, hosted); setup time; expected and actual results; evidence (tool names, arguments, output excerpts, error messages); status per check; fixes; retest outcome.
+Artifact version and frozen reference; author team and reviewer team; OS, AI assistant and its version, Python version; execution mode (stdio local, HTTP local, hosted); setup time; expected and actual results; evidence (tool names, arguments, output excerpts, error messages); status per check; fixes; retest outcome.
 
 | Status | Meaning |
 |---|---|
@@ -69,7 +73,7 @@ Artifact version and frozen reference; author team and reviewer team; OS, Claude
 
 An author demonstration does **not** count as independent reproduction.
 
-## If Claude usage limits or connectivity interrupt testing
+## If assistant usage limits or connectivity interrupt testing
 
 Continue the deterministic checks – install, documented MCP example, additional input, invalid input – with a plain MCP client (for example a copy of [first_call.py](../scripts/first_call.py) pointed at the server, or the MCP Inspector). Mark the skill invocation and any combined agent-workflow checks **blocked** until they can be completed, and complete them later if possible. Never mark a blocked check as pass.
 

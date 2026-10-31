@@ -5,7 +5,7 @@
 | **Scientific purpose** | Before building anything, establish that suitable data exist for your region and period, and that nobody has already built the capability. |
 | **Learning objective** | Use Earthdata MCP to find a collection, verify granules for a region and period, and inspect variables, services, software and citations; search the hackathon catalog; complete a [discovery record](../templates/discovery-record.md) with a reuse/extend/build decision. |
 | **Estimated time** | 45 minutes |
-| **Starting state** | [Tutorial 00](00-first-tool-call.md) done. Network access. `earthdata` approved in Claude Code. Your team has a rough question (see [challenge cards](../docs/challenge-cards.md)). |
+| **Starting state** | [Tutorial 00](00-first-tool-call.md) done. Network access. `earthdata` connected in your AI assistant. Your team has a rough question (see [challenge cards](../docs/challenge-cards.md)). |
 | **Credentials** | None. Earthdata metadata search is open. Downloading files (not done here) needs a free Earthdata Login. |
 
 Background: [docs/discovery-first.md](../docs/discovery-first.md) explains the two required checks, the route for model data outside Earthdata, and why metadata discovery is not data access.
@@ -22,11 +22,9 @@ Example: `--team river-rats --server river-flow-tools --skill river-flow-check`.
 
 ## Step 2 – Check A: data discovery with Earthdata MCP (20 minutes)
 
-### Option 1: Claude Code with the discovery skill (recommended)
+### Option 1: your AI assistant with the discovery skill (recommended)
 
-```bash
-claude
-```
+In a new chat with Copilot, Claude Code or Codex. Type `/` (Copilot, Claude Code) or `$` (Codex) before the skill name to invoke it explicitly; Codex users write `$earth-data-discovery`:
 
 ```text
 /earth-data-discovery Is monthly 2 m air temperature from MERRA-2 available for central California, POLYGON((-121 33,-117 33,-117 38,-121 38,-121 33)), in 2020?
@@ -65,7 +63,7 @@ uv run python scripts/catalog.py search bias
 
 Expected: `obs-model-starter` (bias/RMSE at a site) and the Earthdata entries. Also read [catalog/index.md](../catalog/index.md) and think about other MCP servers you know. Note what already exists and what is missing.
 
-In Claude Code you can ask: `Search this repository's catalog for anything that computes seasonal cycles or anomalies.`
+In your assistant you can ask: `Search this repository's catalog for anything that computes seasonal cycles or anomalies.`
 
 ## Step 4 – Decide and record (10 minutes)
 

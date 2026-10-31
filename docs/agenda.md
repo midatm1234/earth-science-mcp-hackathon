@@ -6,7 +6,7 @@
 |---|---|---|---|
 | 08:00–08:45 | Setup clinic (doors open) | Mentors run the [setup checks](setup.md#what-the-setup-clinic-checks) with every participant | [START_HERE](../START_HERE.md), [troubleshooting](troubleshooting.md) |
 | 08:45–09:00 | Welcome | Goals, teams, code of conduct, how the day ends (peer testing) | this page |
-| 09:00–09:30 | First tool call | Everyone completes stdio, HTTP and Claude Code calls | [Tutorial 00](../tutorials/00-first-tool-call.md) |
+| 09:00–09:30 | First tool call | Everyone completes stdio, HTTP and AI-assistant calls (Copilot, Claude Code or Codex) | [Tutorial 00](../tutorials/00-first-tool-call.md) |
 | 09:30–09:50 | Concepts | Host, client, server, tool, catalog, skill; transports; hosting vs installing | [MCP and skills](mcp-and-skills.md) |
 | 09:50–10:05 | Break | | |
 | 10:05–10:50 | Discovery first | Teams pick a challenge card, run both checks, decision signed off by mentor | [Tutorial 01](../tutorials/01-discover-existing-capabilities.md), [challenge cards](challenge-cards.md) |

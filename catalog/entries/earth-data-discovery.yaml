@@ -28,18 +28,20 @@ dependencies:
   python: ">=3.11,<3.15"
   packages: []
 requires_mcp_tools:
-  - mcp__earthdata__get_keywords
-  - mcp__earthdata__get_collections
-  - mcp__earthdata__get_granules
-  - mcp__earthdata__get_variables
-  - mcp__earthdata__get_services
-  - mcp__earthdata__get_tools
-  - mcp__earthdata__get_citations
+  - earthdata/get_keywords
+  - earthdata/get_collections
+  - earthdata/get_granules
+  - earthdata/get_variables
+  - earthdata/get_services
+  - earthdata/get_tools
+  - earthdata/get_citations
 tools: []
 transports: []
 install: uv run python scripts/install_skills.py earth-data-discovery
 run:
+  copilot: /earth-data-discovery monthly 2 m air temperature, central California, 2020
   claude-code: /earth-data-discovery monthly 2 m air temperature, central California, 2020
+  codex: $earth-data-discovery monthly 2 m air temperature, central California, 2020
 runtime: 2-4 minutes of agent time
 example:
   prompt: Is monthly 2 m air temperature from MERRA-2 available for central California in 2020?
@@ -48,7 +50,7 @@ example:
     10.5067/AP1B0BA5PD2K), 12 granules for 2020 in the polygon, T2M in K with fill value,
     Harmony/OPeNDAP services, catalog matches and a reuse/extend/build decision.
 tests:
-  command: uv run python scripts/verify_claude_workflow.py --only combined
+  command: uv run python scripts/verify_agent_workflow.py --client <claude|copilot|codex> --only combined
   evidence: docs/validation-report.md
 status:
   review: accepted
@@ -56,10 +58,11 @@ status:
     result: partial
     date: "2026-10-30"
     by: organizer preparation
-    platform: macOS 27.0.1 arm64, Claude Code 2.1.185
+    platform: >-
+      macOS 27.0.1 arm64; GitHub Copilot CLI 1.0.105; Codex CLI 0.164.0-alpha.11.1; Claude Code 2.1.185
     evidence: >-
-      docs/validation-report.md - Earthdata MCP tool calls verified with a plain MCP client
-      (scripts/earthdata_probe.py); skill discovered by Claude Code; model-driven invocation pending.
+      docs/validation-report.md - combined check (skill + live Earthdata MCP, 12 granules) passes with
+      Copilot and Codex; Claude Code model-driven check pending.
   peer_testing: []
   hosting:
     status: not-applicable

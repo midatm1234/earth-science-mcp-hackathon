@@ -35,7 +35,7 @@ The same form is used for both routes: **pull request** and **mentor-assisted**.
 | Skill, explicit | `/<skill> ...` | | tool names called |
 | Skill, natural trigger | "..." | | |
 | Skill, should not apply | "..." | | |
-| Platform | OS, Python, Claude Code version | | |
+| Platform | OS, Python, AI assistant(s) and version(s) | | |
 
 ## Notes for reviewers
 

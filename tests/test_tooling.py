@@ -13,6 +13,7 @@ import pytest
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 
+import client_config  # noqa: E402
 import install_skills  # noqa: E402
 import new_contribution  # noqa: E402
 import package  # noqa: E402
@@ -103,8 +104,8 @@ def test_catalog_status_rules(tmp_path):
 def test_skill_requiring_unknown_tool_is_rejected(tmp_path):
     root = _repo_copy(tmp_path)
     entry = root / "catalog" / "entries" / "obs-model-comparison.yaml"
-    entry.write_text(entry.read_text().replace("mcp__obs-model-starter__list_datasets",
-                                               "mcp__obs-model-starter__does_not_exist"))
+    entry.write_text(entry.read_text().replace("obs-model-starter/list_datasets",
+                                               "obs-model-starter/does_not_exist"))
     rep = vr.Report()
     vr.check_catalog(root, rep)
     assert any("does not list tool 'does_not_exist'" in e for e in rep.errors)
@@ -120,12 +121,38 @@ def test_scaffold_creates_valid_passing_contribution(tmp_path):
     result = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--rootdir", str(server),
                              str(server / "tests")], capture_output=True, text=True, cwd=root)
     assert result.returncode == 0, result.stdout + result.stderr
-    rep = vr.run(root, ["catalog", "files", "skills", "deps", "tooltests", "links"])
+    rep = vr.run(root, ["catalog", "files", "skills", "deps", "tooltests", "links", "clients"])
     assert rep.errors == []
+    assert "zz-scaffold-tools" in client_config.load_mcp_json(root)
+    assert client_config.load_codex(root)["zz-scaffold-tools"]["args"] == client_config.stdio_args("zz-scaffold-tools")
     with pytest.raises(SystemExit, match="Already exists"):
         new_contribution.main(["--team", "zz-tooling-test", "--server", "zz-scaffold-tools", "--root", str(root)])
     with pytest.raises(SystemExit, match="must be 3-40"):
         new_contribution.main(["--team", "x", "--server", "Bad_Name", "--root", str(root)])
+
+
+def test_client_configs_must_agree(tmp_path):
+    root = _repo_copy(tmp_path)
+    assert vr.run(root, ["clients"]).errors == []
+    toml = root / ".codex" / "config.toml"
+    toml.write_text(toml.read_text().replace("servers/obs-model-starter/server.py", "servers/other/server.py"))
+    errors = " ".join(vr.run(root, ["clients"]).errors)
+    assert "launched differently" in errors
+    (root / "servers" / "unregistered-tools").mkdir()
+    assert "not registered" in " ".join(vr.run(root, ["clients"]).errors)
+
+
+def test_install_skills_targets_each_client(tmp_path, monkeypatch):
+    monkeypatch.setattr(install_skills, "REPO", tmp_path)
+    assert install_skills.main([]) == 0
+    for folder in (".claude", ".agents"):
+        assert (tmp_path / folder / "skills" / "obs-model-comparison" / "SKILL.md").exists()
+    assert not (tmp_path / ".github" / "skills").exists()
+    assert install_skills.main(["--check"]) == 0
+    assert install_skills.main(["--check", "--client", "codex"]) == 0
+    install_skills.main(["--remove", "--client", "claude"])
+    assert install_skills.main(["--check", "--client", "claude"]) == 1
+    assert install_skills.main(["--check", "--client", "copilot"]) == 0
 
 
 def test_install_skills_copy_check_and_remove(tmp_path):
@@ -161,6 +188,8 @@ def test_bundle_contains_accepted_artifacts_only(tmp_path, monkeypatch):
     assert "servers/obs-model-starter/server.py" in names
     assert "skills/obs-model-comparison/SKILL.md" in names
     assert "BUNDLE_MANIFEST.json" in names
+    assert {".mcp.json", ".codex/config.toml", "AGENTS.md", "CLAUDE.md"} <= names
+    assert not any(n.startswith((".claude/", ".agents/")) for n in names)
     assert package.verify(target) == 0
 
 

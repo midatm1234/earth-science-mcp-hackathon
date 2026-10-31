@@ -6,7 +6,7 @@
 | **Learning objective** | Freeze and submit your server and skill (pull request or mentor-assisted), then install another team's contribution in a clean session, run its example, invoke its skill, try new and invalid inputs, check units/provenance/limitations, and record a peer-test report with a retest. |
 | **Estimated time** | 20 minutes submission + the 90-minute peer-testing block |
 | **Starting state** | Tutorials 02–04 done; `submissions/<team>/submission.md` drafted. |
-| **Credentials** | Claude subscription. GitHub account only for the pull-request route. |
+| **Credentials** | Your AI assistant's account. GitHub account only for the pull-request route. |
 
 ## Part A – Freeze and submit (20 minutes, before the peer-testing block)
 
@@ -61,19 +61,19 @@ Full procedure and rules: [docs/peer-testing.md](../docs/peer-testing.md). Copy 
 
 ### Clean session
 
-Use the event's prepared environment (common dependencies already installed), a **new terminal** and a **new Claude Code session**. Unzip the package into a fresh copy of the event bundle (or check out the frozen commit), then:
+Use the event's prepared environment (common dependencies already installed), a **new terminal** and a **new chat/session** in your AI assistant (any of the three; record which). Unzip the package into a fresh copy of the event bundle (or check out the frozen commit), then:
 
 ```bash
 uv run python scripts/package.py verify <path>/<name>-0.1.0.zip
 unzip -o <path>/<server-name>-0.1.0.zip      # Windows: Expand-Archive <path>\<server-name>-0.1.0.zip -DestinationPath . -Force
 unzip -o <path>/<skill-name>-0.1.0.zip
 uv run python scripts/install_skills.py <skill-name>
-claude mcp add --scope local <server-name> -- uv run --quiet python servers/<server-name>/server.py
+uv run python scripts/client_config.py register <server-name>
 ```
 
 Unzip at the repository root: the archives contain `servers/…`, `skills/…` and `catalog/entries/…` paths, plus a `<name>-<version>.MANIFEST.json` checksum list (git-ignored).
 
-Skip the `claude mcp add` line if the author's server is already in `.mcp.json` or is a hosted endpoint (`claude mcp add --transport http <name> <URL>`).
+`client_config.py register` adds the server to `.mcp.json` (Copilot, Claude Code) and `.codex/config.toml` (Codex); then start a new session. For a hosted endpoint, add an `http` entry with its URL to both files instead (see the `earthdata` entries).
 
 ### Checks to run and record
 
@@ -85,7 +85,7 @@ Skip the `claude mcp add` line if the author's server is already in `.mcp.json` 
 6. Check units, provenance and limitations in the answer.
 7. Report failures to authors immediately; after their fix, retest and record.
 
-Statuses: **pass**, **partial**, **fail**, **blocked**. If Claude limits or the network interrupt you, continue checks 1, 2, 4 and 5 with a plain client (pattern of [first_call.py](../scripts/first_call.py) or the MCP Inspector) and mark skill and combined-workflow checks **blocked**.
+Statuses: **pass**, **partial**, **fail**, **blocked**. If assistant usage limits or the network interrupt you, continue checks 1, 2, 4 and 5 with a plain client (pattern of [first_call.py](../scripts/first_call.py) or the MCP Inspector) and mark skill and combined-workflow checks **blocked**.
 
 An author demonstrating their own work does not count as a peer test.
 
@@ -97,7 +97,7 @@ An author demonstrating their own work does not count as a peer test.
 
 ## Expected output
 
-A completed peer-test report per artifact, with version/SHA, OS, Claude Code version, execution mode, setup time, expected vs actual, evidence, status, fixes, retest; and the author's catalog entry updated with `peer_testing: [{report: catalog/peer-tests/..., result: ...}]`.
+A completed peer-test report per artifact, with version/SHA, OS, assistant and its version, execution mode, setup time, expected vs actual, evidence, status, fixes, retest; and the author's catalog entry updated with `peer_testing: [{report: catalog/peer-tests/..., result: ...}]`.
 
 ## Exercise (practice before the day)
 
@@ -108,8 +108,8 @@ Peer-test the starter: treat `obs-model-starter` and `obs-model-comparison` as a
 | Symptom | Cause | Fix |
 |---|---|---|
 | `MISMATCH` on verify | Corrupted or wrong file | Ask authors/mentor for the package again; record the SHA you tested |
-| Server not found after `claude mcp add` | Session started before adding | Restart `claude` |
-| Two servers with the same name | Name collision with an installed server | `claude mcp remove <name>`, add again |
+| Server not found after registering | Session started before registering | Start a new chat/session |
+| Two servers with the same name | Name collision with a user-level server | Rename or remove one; `uv run python scripts/client_config.py check` |
 | Authors keep coding during testing | Not allowed | Mentor records the frozen result; fixes only in repair window |
 | Only one team present | No independent reviewer | A mentor who did not author it performs the review |
 
