@@ -1,0 +1,61 @@
+# External capability listed so discovery searches find it. Not reviewed or hosted by this event.
+id: earthdata-mcp
+type: mcp-server
+origin: external
+title: NASA Earthdata MCP (CMR dataset search)
+scientific_purpose: >-
+  Search NASA's Common Metadata Repository: science keywords, collections, granule
+  availability, variables, services, tools and citations. A dataset discovery service,
+  not a registry of MCP servers or agent skills.
+team: external
+authors:
+  - NASA Earthdata / earthdata-mcp maintainers
+version: endpoint /mcp/v1 (server reports version "dev"; protocol 2025-11-25 on 2026-10-30)
+source:
+  path: https://github.com/midatm1234/earthdata-mcp
+  ref: bb0ac5d5b2f59593659c6f8fbf02c3b12ff890df (reviewed commit)
+license: not stated in the reviewed repository (no LICENSE file); used only as a remote service
+attribution: Operated by NASA Earthdata. See docs/reference-review.md.
+data:
+  classes: [live call]
+  volume: metadata only
+  provenance: NASA CMR
+credentials: none for metadata search; Earthdata Login needed only to download data
+network: required
+dependencies:
+  python: none (remote service)
+  packages: []
+requires_mcp_tools: []
+client_name: earthdata   # server name in .mcp.json; tools appear as mcp__earthdata__<tool>
+tools:
+  - get_keywords
+  - get_collections
+  - get_granules
+  - get_variables
+  - get_services
+  - get_tools
+  - get_citations
+transports: [streamable-http]
+install: none - connect to https://cmr.earthdata.nasa.gov/mcp/v1 (already in .mcp.json as "earthdata")
+run:
+  streamable-http: https://cmr.earthdata.nasa.gov/mcp/v1
+runtime: 1-10 seconds per call
+example:
+  tool: get_granules
+  input: {collection_concept_id: C1276812859-GES_DISC, spatial_wkt_geometry: "POLYGON((-121 33,-117 33,-117 38,-121 38,-121 33))", temporal_start_date: "2020-01-01T00:00:00Z", temporal_end_date: "2020-12-31T23:59:59Z", limit: 3}
+  expected_output: {total_hits: 12, first_granule: "MERRA2_400.tavgM_2d_slv_Nx.202001.nc4"}
+tests:
+  command: uv run python scripts/earthdata_probe.py --list-tools
+  evidence: examples/data/cached/earthdata_discovery_merra2_t2m.json
+status:
+  review: external
+  local_verification:
+    result: pass
+    date: "2026-10-30"
+    by: organizer preparation
+    platform: macOS 27.0.1 arm64, mcp 2.3.0 client
+    evidence: examples/data/cached/earthdata_discovery_merra2_t2m.json
+  peer_testing: []
+  hosting:
+    status: external
+    endpoint: https://cmr.earthdata.nasa.gov/mcp/v1

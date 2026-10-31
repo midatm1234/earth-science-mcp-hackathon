@@ -1,0 +1,4 @@
+site_id,name,lat,lon,elevation_m
+SYN-COAST,Synthetic coastal site,34.00,-118.50,20
+SYN-VALLEY,Synthetic inland valley site,36.50,-119.50,100
+SYN-MOUNTAIN,Synthetic mountain site,37.50,-118.50,2500

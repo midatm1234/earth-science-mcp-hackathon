@@ -1,0 +1,59 @@
+# Catalog entry for an agent skill. Field reference: catalog/README.md
+id: obs-model-comparison
+type: agent-skill
+origin: event
+title: Observation-model comparison workflow
+scientific_purpose: >-
+  Guide an agent through selecting observation and model inputs, checking units,
+  time-stamp conventions, missing data and provenance, calling the comparison
+  tool, and explaining bias and RMSE with limitations.
+team: organizers
+authors:
+  - Event organizers (prepared for Hugo Kyo Lee)
+version: 0.1.0
+source:
+  path: skills/obs-model-comparison
+  ref: TBD-at-freeze
+license: Apache-2.0
+attribution: Original text.
+data:
+  classes: [synthetic]
+  volume: none (uses the server's data)
+  provenance: servers/obs-model-starter/data/README.md
+credentials: none
+network: none
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: []
+requires_mcp_tools:
+  - mcp__obs-model-starter__list_datasets
+  - mcp__obs-model-starter__describe_dataset
+  - mcp__obs-model-starter__compare_model_to_obs
+tools: []
+transports: []
+install: uv run python scripts/install_skills.py obs-model-comparison
+run:
+  claude-code: /obs-model-comparison Compare model A with the station observations at SYN-VALLEY.
+runtime: about 1 minute of agent time
+example:
+  prompt: How well does model run B match the station observations at the mountain site in 2021?
+  expected_output: >-
+    One-sentence result, table of n pairs / mean bias / RMSE in degC, unit conversion and
+    excluded months, provenance stating the data are synthetic, limitations, tool trace.
+tests:
+  command: uv run python scripts/verify_claude_workflow.py --only explicit --only natural --only negative
+  evidence: docs/validation-report.md
+status:
+  review: accepted
+  local_verification:
+    result: partial
+    date: "2026-10-30"
+    by: organizer preparation
+    platform: macOS 27.0.1 arm64, Claude Code 2.1.185
+    evidence: >-
+      docs/validation-report.md - SKILL.md validated and discovered by Claude Code; model-driven
+      invocation pending a Claude subscription session.
+  peer_testing: []
+  hosting:
+    status: not-applicable
+    endpoint: none

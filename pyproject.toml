@@ -1,0 +1,36 @@
+[project]
+name = "earth-science-mcp-hackathon"
+version = "0.1.0"
+description = "Starter MCP servers, agent skills, tutorials and contribution tooling for the MCP and Agent Skill Hackathon for Earth Science Observations and Models."
+readme = "README.md"
+requires-python = ">=3.11,<3.15"
+license = "Apache-2.0"
+# Common runtime dependencies shared by every server in servers/.
+# A contribution that needs more must list them in its own requirements.txt
+# and explain why in its README (see CONTRIBUTING.md).
+dependencies = [
+    "mcp==2.3.0",
+    "pyyaml==6.0.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==9.2.0",
+    "ruff==0.17.3",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["templates"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]

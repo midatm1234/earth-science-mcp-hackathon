@@ -1,0 +1,66 @@
+# Catalog entry for an agent skill. Field reference: catalog/README.md
+id: earth-data-discovery
+type: agent-skill
+origin: event
+title: Discovery-first check (Earthdata MCP + hackathon catalog)
+scientific_purpose: >-
+  Before building, find candidate NASA Earthdata collections, verify granule
+  availability for a region and period, inspect variables, services, software and
+  citations, search the hackathon catalog, and record a reuse/extend/build decision.
+team: organizers
+authors:
+  - Event organizers (prepared for Hugo Kyo Lee)
+version: 0.1.0
+source:
+  path: skills/earth-data-discovery
+  ref: TBD-at-freeze
+license: Apache-2.0
+attribution: >-
+  Original text. The Discover -> Verify -> Access sequence follows the workflow documented by
+  the earthdata-mcp project (reviewed, not copied); see docs/reference-review.md.
+data:
+  classes: [live call]
+  volume: metadata only
+  provenance: NASA CMR via https://cmr.earthdata.nasa.gov/mcp/v1
+credentials: none
+network: required (public Earthdata MCP endpoint)
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: []
+requires_mcp_tools:
+  - mcp__earthdata__get_keywords
+  - mcp__earthdata__get_collections
+  - mcp__earthdata__get_granules
+  - mcp__earthdata__get_variables
+  - mcp__earthdata__get_services
+  - mcp__earthdata__get_tools
+  - mcp__earthdata__get_citations
+tools: []
+transports: []
+install: uv run python scripts/install_skills.py earth-data-discovery
+run:
+  claude-code: /earth-data-discovery monthly 2 m air temperature, central California, 2020
+runtime: 2-4 minutes of agent time
+example:
+  prompt: Is monthly 2 m air temperature from MERRA-2 available for central California in 2020?
+  expected_output: >-
+    Filled discovery record naming collection C1276812859-GES_DISC (M2TMNXSLV, DOI
+    10.5067/AP1B0BA5PD2K), 12 granules for 2020 in the polygon, T2M in K with fill value,
+    Harmony/OPeNDAP services, catalog matches and a reuse/extend/build decision.
+tests:
+  command: uv run python scripts/verify_claude_workflow.py --only combined
+  evidence: docs/validation-report.md
+status:
+  review: accepted
+  local_verification:
+    result: partial
+    date: "2026-10-30"
+    by: organizer preparation
+    platform: macOS 27.0.1 arm64, Claude Code 2.1.185
+    evidence: >-
+      docs/validation-report.md - Earthdata MCP tool calls verified with a plain MCP client
+      (scripts/earthdata_probe.py); skill discovered by Claude Code; model-driven invocation pending.
+  peer_testing: []
+  hosting:
+    status: not-applicable
+    endpoint: none

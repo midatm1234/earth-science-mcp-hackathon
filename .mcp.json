@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "obs-model-starter": {
+      "type": "stdio",
+      "command": "uv",
+      "args": ["run", "--quiet", "python", "servers/obs-model-starter/server.py", "--transport", "stdio"]
+    },
+    "earthdata": {
+      "type": "http",
+      "url": "https://cmr.earthdata.nasa.gov/mcp/v1"
+    }
+  }
+}

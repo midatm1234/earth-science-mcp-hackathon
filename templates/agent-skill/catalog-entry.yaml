@@ -1,0 +1,51 @@
+# Catalog entry (copied to catalog/entries/__SKILL_NAME__.yaml by scripts/new_contribution.py)
+id: __SKILL_NAME__
+type: agent-skill
+origin: event
+title: REPLACE short title
+scientific_purpose: >-
+  REPLACE the scientific workflow this skill guides.
+team: __TEAM__
+authors:
+  - REPLACE names (or initials) of team members
+version: 0.1.0
+source:
+  path: skills/__SKILL_NAME__
+  ref: TBD-at-freeze
+license: Apache-2.0
+attribution: REPLACE original work, or name and license of anything reused.
+data:
+  classes: [synthetic]
+  volume: none (uses the server's data)
+  provenance: servers/__SERVER_NAME__/README.md
+credentials: none
+network: none
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: []
+requires_mcp_tools:
+  - mcp____SERVER_NAME____summarize_values
+tools: []
+transports: []
+install: uv run python scripts/install_skills.py __SKILL_NAME__
+run:
+  claude-code: /__SKILL_NAME__ REPLACE example request
+runtime: REPLACE e.g. about 1 minute of agent time
+example:
+  prompt: REPLACE natural-language request
+  expected_output: REPLACE what a correct answer contains
+tests:
+  command: REPLACE see tutorials/03-create-an-agent-skill.md (explicit, natural, negative checks)
+  evidence: submissions/__TEAM__/submission.md
+status:
+  review: draft
+  local_verification:
+    result: not-run
+    date: ""
+    by: ""
+    platform: ""
+    evidence: ""
+  peer_testing: []
+  hosting:
+    status: not-applicable
+    endpoint: none

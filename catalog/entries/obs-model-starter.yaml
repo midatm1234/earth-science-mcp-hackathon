@@ -1,0 +1,58 @@
+# Catalog entry for an MCP server. Field reference: catalog/README.md
+id: obs-model-starter
+type: mcp-server
+origin: event
+title: Observation-model comparison starter (synthetic sample data)
+scientific_purpose: >-
+  Compare monthly model values (near-surface air temperature) with station observations at a site: report valid
+  pairs, matched months, units, mean bias and RMSE with explicit alignment and
+  missing-data rules. Teaching starter that every team extends.
+team: organizers
+authors:
+  - Event organizers (prepared for Hugo Kyo Lee)
+version: 0.1.0
+source:
+  path: servers/obs-model-starter
+  ref: TBD-at-freeze
+license: Apache-2.0
+attribution: Original code. Structure informed by the EVE MCP tool registry (Apache-2.0); see docs/attribution.md.
+data:
+  classes: [synthetic]
+  volume: 8 KB
+  provenance: servers/obs-model-starter/data/README.md
+credentials: none
+network: none
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: ["mcp==2.3.0"]
+requires_mcp_tools: []
+client_name: obs-model-starter   # server name in .mcp.json; tools appear as mcp__obs-model-starter__<tool>
+tools:
+  - list_datasets
+  - describe_dataset
+  - compare_model_to_obs
+transports: [stdio, streamable-http]
+install: uv sync   # from the repository root; pip alternative in docs/setup.md
+run:
+  stdio: uv run python servers/obs-model-starter/server.py --transport stdio
+  streamable-http: uv run python servers/obs-model-starter/server.py --transport http   # http://127.0.0.1:8765/mcp
+runtime: under 1 second per call
+example:
+  tool: compare_model_to_obs
+  input: {obs_dataset_id: syn-station-tas-monthly, model_dataset_id: syn-model-a-tas-monthly, site_id: SYN-VALLEY}
+  expected_output: {n_valid_pairs: 23, units: degC, mean_bias: -1.054, rmse: 1.212, excluded_obs_missing_value: ["2020-07"]}
+tests:
+  command: uv run pytest servers/obs-model-starter/tests
+  evidence: docs/validation-report.md
+status:
+  review: accepted
+  local_verification:
+    result: pass
+    date: "2026-10-30"
+    by: organizer preparation
+    platform: macOS 27.0.1 arm64, Python 3.13.12 and 3.14.3
+    evidence: docs/validation-report.md
+  peer_testing: []
+  hosting:
+    status: not-hosted
+    endpoint: TBD

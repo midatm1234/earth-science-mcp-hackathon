@@ -1,0 +1,17 @@
+Earth Science MCP and Agent Skill Hackathon - starter repository
+Copyright 2026 the event organizers and contributors.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE). Synthetic sample
+data in servers/obs-model-starter/data/ are dedicated to the public domain
+(CC0-1.0).
+
+This product includes software patterns adapted from the EVE MCP Tool Registry
+(https://github.com/eve-esa/mcp-tool-registry, reviewed as
+https://github.com/midatm1234/mcp-tool-registry at commit
+a49119dedcb7e929b69b7d78912dd52665c871fc), Copyright the EVE project
+contributors, licensed under the Apache License, Version 2.0: the secret-scanning
+regular expressions in scripts/validate_repo.py and the one-folder-per-server
+contribution layout. See docs/attribution.md.
+
+Contributions in servers/ and skills/ carry their own license stated in their
+catalog entry (catalog/entries/<id>.yaml).

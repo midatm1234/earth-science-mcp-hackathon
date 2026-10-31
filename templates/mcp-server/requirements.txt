@@ -1,0 +1,4 @@
+# Runtime dependencies for pip or container installs. Pin every package with ==.
+# If you add a package, also add it to the root pyproject.toml (uv add <pkg>==<version>)
+# so uv.lock and this file agree. The validator checks this.
+mcp==2.3.0

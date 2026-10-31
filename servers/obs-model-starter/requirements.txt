@@ -1,0 +1,3 @@
+# Runtime dependencies for pip or container installs of this server.
+# The repository-wide lock file is ../../uv.lock. Keep these pins identical to it.
+mcp==2.3.0

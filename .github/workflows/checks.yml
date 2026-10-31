@@ -1,0 +1,59 @@
+name: checks
+
+# Contribution checks. They need no secrets, no LLM credentials and no paid APIs.
+# There is intentionally NO deployment job: merging does not deploy anything.
+# See docs/server-deployment-plan.md before adding one.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, python: "3.11" }
+          - { os: ubuntu-latest, python: "3.13" }
+          - { os: ubuntu-latest, python: "3.14" }
+          - { os: macos-latest, python: "3.13" }
+          - { os: windows-latest, python: "3.13" }
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Lock file is current (dependency reproducibility)
+        run: uv lock --check
+
+      - name: Install locked dependencies
+        run: uv sync --locked
+
+      - name: Exported requirements match the lock
+        shell: bash
+        run: |
+          uv export --frozen --no-hashes --no-dev --no-emit-project -o /tmp/req.txt --quiet
+          diff <(grep -v '^#' requirements.txt) <(grep -v '^#' /tmp/req.txt)
+
+      - name: All repository checks
+        run: uv run python scripts/check_all.py
+
+      - name: Lint
+        run: uv run ruff check .
