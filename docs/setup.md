@@ -84,7 +84,7 @@ Choose one. You can install more than one; they share the same project files.
 ### Claude Code
 
 1. Extensions view (**Cmd/Ctrl+Shift+X**) → search **Claude Code** (publisher **Anthropic**) → Install.
-2. Open the Claude Code panel (Claude icon in the editor toolbar or activity bar, or Command Palette → "Claude Code") and sign in with your **Claude account (subscription)**. Do not choose an API/Console account.
+2. Open the Claude Code panel (Claude icon in the editor toolbar or activity bar, or Command Palette → "Claude Code").
 3. Approve the project MCP servers `obs-model-starter` and `earthdata` when asked (they are defined in `.mcp.json`). Type `/mcp` to see them connected. If they stay pending, open a terminal and run `claude` once to approve them (requires the [Claude Code CLI](https://code.claude.com/docs/en/setup): `curl -fsSL https://claude.ai/install.sh | bash`, Windows `irm https://claude.ai/install.ps1 | iex`).
 4. Skills: `/obs-model-comparison …`.
 5. Type `/status` to confirm you are using your Claude account, not an API key.
