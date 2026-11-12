@@ -1,0 +1,59 @@
+# Catalog entry (copied to catalog/entries/sst-latest.yaml by scripts/new_contribution.py)
+id: sst-latest
+type: mcp-server
+origin: event
+title: Latest SST granule, regional SST maps and 10-day GIF
+scientific_purpose: >-
+  Find the newest granule of a global sea surface temperature collection (default GHRSST MUR L4) in NASA CMR, and draw Cartopy maps and a GIF animation of the newest days of the MUR SST analysis for a small region.
+team: test
+authors:
+  - team test
+version: 0.1.0
+source:
+  path: servers/sst-latest
+  ref: TBD-at-freeze
+license: Apache-2.0
+attribution: Original work by team test. Queries NASA's public CMR search API; no NASA code is reused.
+data:
+  classes: [cached live response, live call, real public data]          # synthetic | cached live response | recorded demonstration | live call | real public data | user-supplied
+  volume: five test fixtures under 4 KB each; about 0.3 MB downloaded per regional day, written to git-ignored sst_output/
+  provenance: servers/sst-latest/README.md
+credentials: none               # or describe each environment variable and how to obtain it
+network: https://cmr.earthdata.nasa.gov/search (NASA CMR) and https://coastwatch.pfeg.noaa.gov/erddap (NOAA ERDDAP), both public, no login; Cartopy downloads Natural Earth coastlines once
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: ["mcp==2.3.0", "cartopy==0.26.0", "matplotlib==3.11.2", "pillow==13.0.0"]
+requires_mcp_tools: []
+client_name: sst-latest   # server name in .mcp.json and .codex/config.toml
+tools:
+  - get_latest_sst_granule
+  - get_newest_sst_dates
+  - fetch_sst_subset
+  - draw_sst_map
+  - make_sst_gif
+  - list_sst_output_files
+transports: [stdio, streamable-http]
+install: uv sync
+run:
+  stdio: uv run python servers/sst-latest/server.py --transport stdio
+  streamable-http: uv run python servers/sst-latest/server.py --transport http
+runtime: about 1 second per call, network dependent (not measured)
+example:
+  tool: get_latest_sst_granule
+  input: {}
+  expected_output: {collection: {short_name: MUR-JPL-L4-GLOB-v4.1}, newest_granule: {time_end: "2026-11-10T21:00:00Z"}}  # value from 2026-11-12; changes daily
+tests:
+  command: uv run pytest servers/sst-latest/tests
+  evidence: submissions/test/submission.md
+status:
+  review: draft
+  local_verification:
+    result: not-run
+    date: ""
+    by: ""
+    platform: ""
+    evidence: ""
+  peer_testing: []
+  hosting:
+    status: not-hosted
+    endpoint: TBD

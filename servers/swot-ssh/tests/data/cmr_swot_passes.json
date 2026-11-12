@@ -1,0 +1,106 @@
+{
+ "feed": {
+  "entry": [
+   {
+    "title": "SWOT_L2_LR_SSH_Basic_058_424_20261106T150521_20261106T155607_PID0_01",
+    "id": "G4405823868-POCLOUD",
+    "time_start": "2026-11-06T15:05:06.545Z",
+    "time_end": "2026-11-06T15:57:04.323Z",
+    "granule_size": "9.379589080810547",
+    "links": [
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://archive.swot.podaac.earthdata.nasa.gov/podaac-swot-ops-cumulus-protected/SWOT_L2_LR_SSH_D/SWOT_L2_LR_SSH_Basic_058_424_20261106T150521_20261106T155607_PID0_01.nc"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://cmr.earthdata.nasa.gov/virtual-directory/collections/C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://search.earthdata.nasa.gov/search/granules?p=C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://github.com/podaac/data-subscriber"
+     }
+    ]
+   },
+   {
+    "title": "SWOT_L2_LR_SSH_Basic_058_373_20261104T192133_20261104T201301_PID0_01",
+    "id": "G4403639586-POCLOUD",
+    "time_start": "2026-11-04T19:21:18.725Z",
+    "time_end": "2026-11-04T20:13:16.430Z",
+    "granule_size": "8.956879615783691",
+    "links": [
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://archive.swot.podaac.earthdata.nasa.gov/podaac-swot-ops-cumulus-protected/SWOT_L2_LR_SSH_D/SWOT_L2_LR_SSH_Basic_058_373_20261104T192133_20261104T201301_PID0_01.nc"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://cmr.earthdata.nasa.gov/virtual-directory/collections/C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://search.earthdata.nasa.gov/search/granules?p=C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://github.com/podaac/data-subscriber"
+     }
+    ]
+   },
+   {
+    "title": "SWOT_L2_LR_SSH_Basic_058_358_20261104T062950_20261104T072119_PID0_01",
+    "id": "G4403639817-POCLOUD",
+    "time_start": "2026-11-04T06:29:36.257Z",
+    "time_end": "2026-11-04T07:21:34.049Z",
+    "granule_size": "8.702991485595703",
+    "links": [
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://archive.swot.podaac.earthdata.nasa.gov/podaac-swot-ops-cumulus-protected/SWOT_L2_LR_SSH_D/SWOT_L2_LR_SSH_Basic_058_358_20261104T062950_20261104T072119_PID0_01.nc"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://cmr.earthdata.nasa.gov/virtual-directory/collections/C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://search.earthdata.nasa.gov/search/granules?p=C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://github.com/podaac/data-subscriber"
+     }
+    ]
+   },
+   {
+    "title": "SWOT_L2_LR_SSH_Basic_058_345_20261103T192102_20261103T201230_PID0_01",
+    "id": "G4405179241-POCLOUD",
+    "time_start": "2026-11-03T19:20:47.685Z",
+    "time_end": "2026-11-03T20:12:45.399Z",
+    "granule_size": "8.92867660522461",
+    "links": [
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://archive.swot.podaac.earthdata.nasa.gov/podaac-swot-ops-cumulus-protected/SWOT_L2_LR_SSH_D/SWOT_L2_LR_SSH_Basic_058_345_20261103T192102_20261103T201230_PID0_01.nc"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://cmr.earthdata.nasa.gov/virtual-directory/collections/C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://search.earthdata.nasa.gov/search/granules?p=C3233945000-POCLOUD"
+     },
+     {
+      "rel": "http://esipfed.org/ns/fedsearch/1.1/data#",
+      "href": "https://github.com/podaac/data-subscriber"
+     }
+    ]
+   }
+  ]
+ }
+}

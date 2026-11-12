@@ -3,11 +3,42 @@
     "obs-model-starter": {
       "type": "stdio",
       "command": "uv",
-      "args": ["run", "--quiet", "python", "servers/obs-model-starter/server.py", "--transport", "stdio"]
+      "args": [
+        "run",
+        "--quiet",
+        "python",
+        "servers/obs-model-starter/server.py",
+        "--transport",
+        "stdio"
+      ]
     },
     "earthdata": {
       "type": "http",
       "url": "https://cmr.earthdata.nasa.gov/mcp/v1"
+    },
+    "sst-latest": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--quiet",
+        "python",
+        "servers/sst-latest/server.py",
+        "--transport",
+        "stdio"
+      ]
+    },
+    "swot-ssh": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--quiet",
+        "python",
+        "servers/swot-ssh/server.py",
+        "--transport",
+        "stdio"
+      ]
     }
   }
 }

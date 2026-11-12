@@ -32,3 +32,9 @@ Thumbs.db
 
 # Package manifests extracted from contribution or bundle ZIPs
 *MANIFEST.json
+
+# Map and GIF output of sst-latest (generated, not committed)
+sst_output/
+
+# Map output of swot-ssh (generated, not committed)
+swot_output/

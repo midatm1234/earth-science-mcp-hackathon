@@ -1,0 +1,14 @@
+{
+  "feed": {
+    "entry": [
+      {
+        "id": "C1996881146-POCLOUD",
+        "dataset_id": "GHRSST Level 4 MUR Global Foundation Sea Surface Temperature Analysis (v4.1)",
+        "short_name": "MUR-JPL-L4-GLOB-v4.1",
+        "version_id": "4.1",
+        "time_start": "2002-05-31T21:00:00.000Z",
+        "processing_level_id": "4"
+      }
+    ]
+  }
+}
