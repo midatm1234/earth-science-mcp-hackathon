@@ -5,7 +5,7 @@
 | **Scientific purpose** | Answer a realistic question that needs several capabilities: check real data with the Earthdata MCP, run your own tools, and report with a consistent procedure (your skill). |
 | **Learning objective** | Plan a multi-tool workflow, let your AI assistant run it in one session, read the tool trace, and say which part (Earthdata, your tool, your skill) is responsible for each statement in the answer. |
 | **Starting state** | [Tutorial 03](03-create-an-agent-skill.md) done: your MCP server and skill are listed in your assistant, and the `earthdata` server is connected. |
-| **Credentials** | Your AI assistant's account. No Earthdata Login (no downloads). |
+| **Credentials** | Your AI assistant's account. No Earthdata Login for the main workflow (no downloads). The optional SWOT example needs an Earthdata Login: a user token, or a `.netrc` file. |
 
 ## What you do and what the assistant does
 
@@ -86,15 +86,44 @@ Also check:
 
 This optional example adds a second dataset, SWOT sea surface height (SSH), with its own tools and its own skill. The final workflow then uses **two skills**: `sst-map-workflow` for temperature and `swot-ssh-workflow` for sea surface height.
 
-> **Needs an Earthdata Login token.** SWOT files are not on a login-free service that I found, so this example downloads data. Do it only if your organizers allow it. You need a free [Earthdata Login](https://urs.earthdata.nasa.gov) account and a user token:
->
-> 1. Sign in at <https://urs.earthdata.nasa.gov> and open your profile.
-> 2. Click **Generate Token**, then the **Generate Token** button. The token is hidden until you click **Show Token**.
-> 3. Set it as the environment variable `EARTHDATA_TOKEN` on your own machine, then start a new session. Do not paste it into the chat, a file in the repository or a tool argument.
->
-> A token is valid for 60 days, and you can hold at most two. If it expires or is rejected, generate a new one (see NASA's [user token guide](https://urs.earthdata.nasa.gov/documentation/for_users/user_token)). If it may have been exposed, delete it on the same page.
->
-> **How the tool uses it.** The tool reads `EARTHDATA_TOKEN` and sends it only to NASA, in the header `Authorization: Bearer <token>`, as the user token guide describes. If the token is missing, the tool pauses and asks you to sign in through a pop-up in your assistant. The pop-up opens the Earthdata Login page in your browser, so your password never goes through the chat, the model or any log. After you generate the token and set the variable, run the request again. If it still fails, see NASA's [Python data access guide](https://urs.earthdata.nasa.gov/documentation/for_users/data_access/python) for how the data server redirects through Earthdata Login.
+### Before you start: log in to Earthdata
+
+SWOT files are not on a login-free service, so this example downloads data and needs a free NASA Earthdata Login. Do it only if your organizers allow it. Do this once, on your own machine, **outside the chat**. Never paste your password or token into the chat, a file in the repository, or a tool argument.
+
+**Step 1 – Get an account.** Go to <https://urs.earthdata.nasa.gov>, choose **Register**, and create a free account. Remember your username and password. If you already have one, sign in to check that it works.
+
+**Step 2 – Approve the data archive (one time).** While signed in, open **Applications** → **Authorized Apps** → **Approve More Applications**, and approve **NASA GESDISC DATA ARCHIVE** and **PO.DAAC Data Access**. Without this, downloads can be refused even with a correct login.
+
+**Step 3 – Let the tool find your login.** Choose **one** option.
+
+*Option A: a `.netrc` file (recommended; no environment variables).*
+
+1. Open a plain text editor (TextEdit in plain-text mode, Notepad, or VS Code).
+2. Type one line, replacing the two placeholders:
+
+   ```text
+   machine urs.earthdata.nasa.gov login YOUR_USERNAME password YOUR_PASSWORD
+   ```
+
+3. Save it in your home folder with the exact name `.netrc` (macOS and Linux: `~/.netrc`; Windows: `_netrc` in `C:\Users\<you>`). It must not be inside this repository.
+4. MacOS and Linux: make the file private by asking your assistant, without showing it the file: "Set the permissions of my ~/.netrc file to 600 and check nothing else changed." Windows needs no extra step.
+
+*Option B: a user token.*
+
+1. Sign in at <https://urs.earthdata.nasa.gov> and open your profile, then **Generate Token**.
+2. Click **Show Token** and copy it.
+3. Set it as the environment variable `EARTHDATA_TOKEN` on your machine (macOS and Linux: in your shell profile; Windows: in **Environment Variables** in System Settings). Then restart VS Code so the assistant sees it.
+4. A token is valid for 60 days. When it expires or is rejected, generate a new one. If it may have been exposed, delete it on the same page.
+
+The tool tries `EARTHDATA_TOKEN` first and falls back to `.netrc`. It sends either one only to NASA.
+
+**Step 4 – Start a new session and test.** Start a new chat/session in your assistant, then paste:
+
+```text
+Using only the swot-ssh tools, find SWOT passes over the California coast (32 to 42 N, 128 to 117 W) in the last 10 days, fetch the newest one, and tell me how many valid points were kept. Do not print, read or ask me for any credential. If the login fails, tell me the error message and stop.
+```
+
+If it fetches the pass and reports points kept, you are logged in. If it reports a missing or rejected login, check the username and password (or token) and that you started a new session after creating the file or setting the variable. If it still fails, see NASA's [Earthdata Login help](https://urs.earthdata.nasa.gov/documentation).
 
 ### Part 1 – Build the SWOT tools
 
@@ -112,7 +141,8 @@ propose how many tools are needed, then build them. Region: <region>.
 - Quality: apply the product's quality flags, drop fill values, and report how many points were dropped.
 - Output: file paths, sizes, pass times, units (m) and date checked. Never data arrays.
   Write files only to the git-ignored output folder.
-- Login: use the Earthdata user token .
+- Login: use the Earthdata user token from EARTHDATA_TOKEN, or else the urs.earthdata.nasa.gov entry
+  in ~/.netrc. Never print, log or return either one.
 - Dependencies: pin any new package with uv add. Tests: offline, with a small saved sample.
 
 Follow AGENTS.md. Tell me what you built and what you could not verify.
@@ -122,7 +152,7 @@ Check the result with the Step 3 table in [tutorial 03](03-create-an-agent-skill
 
 | Check | What to look for |
 |---|---|
-| Credentials | The token is read only from `EARTHDATA_TOKEN`, sent only to NASA, and appears in no file, log or tool result; the variable name is in the README; a missing or rejected token gives a clear message, not a crash. |
+| Credentials | The token is read from `EARTHDATA_TOKEN`, or else the login from `~/.netrc`; either is sent only to NASA and appears in no file, log or tool result; the variable name and the `.netrc` option are in the README; a missing or rejected credential gives a clear message, not a crash. |
 | Quality | The result says which flags were applied and how many points were dropped. |
 | Swath | The assistant explained how it draws irregular swaths. |
 | Honesty | It says what ran against the real service and what only against the saved sample. |
@@ -170,8 +200,8 @@ Pass if:
 - the trace shows `sst-latest` tools for the first map and `swot-ssh` tools for the second, in that order;
 - no shell command or ad hoc script was used;
 - the answer states the time gap between the two maps and does not claim they are simultaneous;
-- with `EARTHDATA_TOKEN` unset, the tool paused with a sign-in pop-up (or a clear message) and made no download;
-- with the token set, the download worked;
+- with `EARTHDATA_TOKEN` unset and no `.netrc` entry, the tool paused with a sign-in pop-up (or a clear message) and made no download;
+- with the token set, or with a `.netrc` entry, the download worked;
 - no password or token appears anywhere in the conversation, the tool results or the files.
 
 ## Exercise
