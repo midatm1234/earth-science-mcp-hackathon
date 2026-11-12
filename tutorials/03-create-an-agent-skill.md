@@ -3,114 +3,158 @@
 | | |
 |---|---|
 | **Scientific purpose** | Capture the expert procedure around a tool – which checks to run first, how to choose arguments, how to report results honestly – so any agent session follows it. |
-| **Learning objective** | Write a valid `SKILL.md`, install it from its canonical folder for your AI assistant (Copilot, Claude Code or Codex), and test it three ways: explicit invocation, a natural-language trigger, and a request where it should **not** apply. Confirm it can reach its MCP tools. |
-| **Estimated time** | 45 minutes |
-| **Starting state** | Your tool works ([tutorial 02](02-build-an-mcp-tool.md)). `skills/<skill-name>/SKILL.md` exists from the scaffold (or copy [templates/agent-skill/SKILL.md](../templates/agent-skill/SKILL.md)). |
+| **Learning objective** | Describe the procedure to an AI assistant, let it write and install the skill, check what it wrote, and test it three ways: a direct request for the skill, a natural-language question, and a request where it should **not** apply. |
+| **Starting state** | [Tutorial 02](02-build-an-mcp-tool.md) done: your team has an MCP server with its tools, listed in your assistant, and a folder `submissions/<team-name>/`. |
 | **Credentials** | Your AI assistant's account. |
 
-Read [skills/obs-model-comparison/SKILL.md](../skills/obs-model-comparison/SKILL.md) first: it is the model to imitate.
+## What a skill is
 
-## Anatomy of SKILL.md
+A skill is a short instruction file (`SKILL.md`) that tells an AI assistant **when** to use your tool and **how** to report the result. The assistant sees only the skill's name and one-paragraph description until a question matches it, so the description must use the words people actually say.
 
-```markdown
----
-name: seasonal-bias-check            # = folder name; lowercase, digits, single hyphens; ≤ 64 chars
-description: Explains seasonal model bias at a site using the obs-model-starter seasonal_bias tool... Use when the user asks which season a model is too warm or too cold, or about seasonal bias.
-license: Apache-2.0
-compatibility: Requires the obs-model-starter MCP server.
-allowed-tools: mcp__obs-model-starter__describe_dataset mcp__obs-model-starter__seasonal_bias
-metadata:
-  version: "0.1.0"                   # quote it: metadata values must be strings
----
+You decide **what the procedure is** and **how to check it**. The assistant writes the file, installs it for all assistants and validates it. The repository's instructions ([AGENTS.md](../AGENTS.md), and `CLAUDE.md` for Claude Code) already tell the assistant where skills live and not to edit the installed copies, so you do not need to repeat that.
 
-# Title
-## When to use
-## When not to use
-## Required tools
-## Procedure
-## Expected output
-## Assumptions
-## Limitations
-## Example tasks
-```
+For a model of a good skill, ask your assistant to read and summarize [skills/obs-model-comparison/SKILL.md](../skills/obs-model-comparison/SKILL.md).
 
-| Field | Why it matters |
-|---|---|
-| `name`, `description` | Required by the [Agent Skills spec](https://agentskills.io/specification). The assistant sees only these two until the skill is used, so the description must contain the words users actually say, and "Use when …". Max 1024 characters. |
-| `allowed-tools` | Optional, experimental in the spec. Claude Code pre-approves the listed tools while the skill is active (MCP tools named `mcp__<server>__<tool>`); Copilot and Codex ignore it. In the body, name tools by server and tool (`obs-model-starter` → `compare_model_to_obs`), because each assistant adds a different prefix. |
-| Body sections | Required by this hackathon's validator. Keep under 500 lines; put long reference material in `references/` and link it. |
+## Step 1 – Describe the procedure
 
-Add `scripts/`, `references/` or `assets/` only if the procedure needs them.
+Write down, in plain words:
 
-## Step 1 – Write the skill (20 minutes)
+- which question the skill is for, in the words a colleague would use;
+- which tool the assistant must call first, and what to check in its result;
+- when it should stop and ask, or say the tool is not connected;
+- how the answer should look: a result sentence, a short table, the date checked, the source, limitations.
 
-Edit `skills/<skill-name>/SKILL.md`. Replace every `REPLACE`. In **Procedure**, write numbered steps an agent can follow exactly: which tool first, what to check in its result, when to stop and ask. In **Expected output**, specify the answer structure (result sentence, table, method, provenance, limitations, tool trace).
+Also write down one request that looks similar but where the skill should **not** apply.
 
-Validate:
+## Step 2 – Ask your assistant to write it
 
-```bash
-uv run python scripts/validate_repo.py --only skills --only catalog
-```
-
-Expected: `0 error(s)`.
-
-## Step 2 – Install from the canonical folder (2 minutes)
-
-The canonical source is `skills/<skill-name>/`. Each assistant reads its own folder; one command copies the skill to all of them:
-
-```bash
-uv run python scripts/install_skills.py <skill-name>
-```
-
-Expected: `installed <skill-name> -> .../.claude/skills/<skill-name>` (Claude Code, also read by Copilot) and `-> .../.agents/skills/<skill-name>` (Codex, also read by Copilot). Copilot lists the skill once. Use `--client claude|copilot|codex` to install for one assistant only, and `--personal` to install into your home folder for all projects.
-
-After every edit, re-run this command and start a new chat/session. Never edit the copies; `--check` reports outdated copies.
-
-## Step 3 – Test three ways (20 minutes)
-
-Run each prompt in a **new chat/session**. Invoke explicitly with `/name` in Copilot and Claude Code, `$name` in Codex.
-
-| Test | Prompt (example for the starter skill) | Pass if |
-|---|---|---|
-| Explicit invocation | `/obs-model-comparison Compare model A with the station observations at SYN-VALLEY.` (Codex: `$obs-model-comparison …`) | Skill loads; `describe_dataset` and `compare_model_to_obs` are called; answer follows Expected output |
-| Natural trigger | `How well does model run B match the station observations at the mountain site in 2021?` | The assistant loads the skill by itself (the transcript shows the skill being used or its `SKILL.md` being read) and calls the tools |
-| Should not apply | `In one sentence, what does RMSE stand for?` | The skill is **not** loaded and no starter tool is called |
-| Tool access | (any of the first two) | The MCP tool calls actually appear and return data; a shell running Python scripts does not count. If the server is disconnected the skill says so and stops |
-
-Record the assistant and its version, the prompts, tools called and pass/fail in `submissions/<team>/submission.md`. If your team uses more than one assistant, test each; skills behave slightly differently in each.
-
-If the natural trigger fails, improve the `description` (add the user's words) – not the body. If the skill triggers when it should not, make the description more specific.
-
-Organizers can run the same checks non-interactively for the starter skills with any assistant's command-line tool (uses a few requests on that account):
-
-```bash
-uv run python scripts/verify_agent_workflow.py --client copilot   # or claude, codex
-```
-
-## Example prompt
+Start a **new** chat or session in your AI assistant (GitHub Copilot in Agent mode, Claude Code or Codex) and paste a prompt like this, with your own names:
 
 ```text
-/seasonal-bias-check Which season is model A worst at SYN-MOUNTAIN, and is the sample big enough to say so?
+Create an agent skill named sst-latest-check for team <team-name>. It guides the MCP server my team
+built in tutorial 02 (find it in catalog/entries/ with team: <team-name>); read its tools first and use
+only those. Use it when someone asks how current the sea surface temperature data are.
+Procedure: call the latest-granule tool and report what it returns; if the server is not connected, stop.
+Install it, validate it, and follow AGENTS.md.
+Tell me what you created and what you could not verify.
 ```
 
-## Expected output
+Read the assistant's plan before you approve it.
 
-A short answer with: result sentence; table of season, n pairs, bias (°C); note on pairing and excluded months; provenance (synthetic); limitations (≈6 pairs per season over two years is a small sample); tool trace.
+## Step 3 – Check what it wrote
+
+Ask the assistant to show you `skills/<skill-name>/SKILL.md` and explain it, then check it against this list:
+
+| Check | What to look for |
+|---|---|
+| Name | Lowercase words with hyphens, and the same as the skill's folder name. |
+| Description | Says what the skill does and starts the trigger with "Use when…", in the words users say. |
+| When to use / not to use | Both are there, and "not to use" includes your look-alike request. |
+| Procedure | Numbered steps an agent can follow exactly: which tool first, what to check, when to stop. |
+| Expected output | Names the parts of the answer, including provenance and limitations. |
+| Honesty | The assistant says whether the skill was validated and installed, or only written. |
+
+If something is missing, tell the assistant what to change and ask it to validate and reinstall. After every change, start a new chat or session: assistants read skills when a session begins.
+
+## Step 4 – Test it three ways
+
+Start a **new** chat or session for each test. Skills work with `/name` in Copilot and Claude Code and `$name` in Codex.
+
+| Test | Prompt | Pass if |
+|---|---|---|
+| Direct request | `/sst-latest-check` (Codex: `$sst-latest-check`), then ask: `What is the latest sea surface temperature data available?` | The skill loads and the `get_latest_sst_granule` tool is called. |
+| Natural question | `How up to date is the global sea surface temperature data from NASA?` | The assistant uses the skill by itself, without being told, and calls the tool. |
+| Should not apply | `In one sentence, what does SST stand for?` | The skill is **not** used and no tool is called. |
+
+Also check that the tool calls actually happen. If the assistant ran a shell command or Python script instead of calling the MCP tool, the test did not pass. If the server is disconnected, the skill should say so and stop.
+
+Ask your assistant to record the assistant name and version, the prompts, the tools called and pass or fail for each test in `submissions/<team-name>/submission.md`. If your team uses more than one assistant, test each; skills behave slightly differently in each.
+
+If the natural question fails, ask the assistant to improve the **description** by adding the words you used. If the skill is used when it should not be, ask for a more specific description.
+
+## Example: a skill that runs a whole workflow
+
+A skill can guide a **workflow** that needs several tools in a fixed order. In this example the workflow finds the newest sea surface temperature (SST) data, draws a Cartopy map, and makes a GIF animation of the map for the last 10 days.
+
+The skill may use **only your team's MCP tools**: no shell commands, no ad hoc Python scripts and no tools from other servers. So every action the workflow needs must exist as a tool first. Do it in two prompts, in two sessions.
+
+### Part 1 – Ask your assistant to build the tools
+
+Start a **new** chat or session and paste a prompt like this, with your own team name and region:
+
+```text
+Extend the sst-latest MCP server (team <team-name>) so it can pull the newest sea surface temperature
+(SST) data, draw a Cartopy map, and make a GIF of the map for the last 10 days. Region: <region>.
+First read the sst-latest README and tools, propose how many new tools are needed, then build them.
+
+- Tools: one per step (newest date, fetch regional subset, draw map, make GIF, list files made);
+  add more if a step needs them. The workflow must work using only the server's tools.
+- Output: file paths, sizes, dates covered and date checked. Never images or data arrays.
+  Write files only to one git-ignored output folder.
+- Data: a small regional subset only. Prefer a source without login (e.g. NOAA CoastWatch ERDDAP).
+  Any login credentials: environment variables only, never in files. Say which source you used.
+- Dependencies: pin Cartopy and a GIF writer with uv add; explain them in the README.
+- Tests: offline, with a small saved sample.
+
+Follow AGENTS.md. Tell me what you built and what you could not verify.
+```
+
+Check the result with the Step 3 table, plus these questions for the assistant:
+
+| Check | What to look for |
+|---|---|
+| Tool count | The assistant explained why it chose that many tools, and every step of the workflow has a tool. |
+| Data | It named its source, the region size and why it did not download whole files. |
+| Credentials | None in any file; any variable names are in the README. |
+| Output | Tools return paths and dates, not pictures. |
+| Honesty | It says which parts ran against the real service and which only against the saved sample. |
+
+### Part 2 – Ask your assistant to write the skill
+
+The new tools appear only in a new session. **Exit this session and start a new one**, confirm the new tools are listed, then paste:
+
+```text
+Write an agent skill named sst-map-workflow for team <team-name>. First list the tools of the
+sst-latest MCP server in this session.
+
+- Tools: use only those tools. List them in allowed-tools. Never fall back to shell commands,
+  Python scripts or tools from other servers; if a tool is missing or fails, say so and stop.
+- Procedure, in order: newest available date, fetch the last 10 days for the region, draw the map,
+  make the GIF, list the files made.
+- Answer: region, dates covered, source, date checked and files made; say an SST map shows a
+  gridded analysis, not station measurements.
+- Use it for: maps or animations of recent sea surface temperature. Not for: values at one place,
+  or forecasts.
+- Description: use the words people actually say.
+
+Install it for all assistants, validate it, and follow AGENTS.md.
+Tell me what you created and what you could not verify.
+```
+
+### Part 3 – Test it
+
+Start a **new** session, then:
+
+| Test | Prompt | Pass if |
+|---|---|---|
+| Direct request | `/sst-map-workflow` (Codex: `$sst-map-workflow`), then ask: `Make a map and a 10-day animation of sea surface temperature for <region>.` | Only your server's tools are called, in order, and a map and a GIF are created. |
+| Only those tools | Ask: `Which tools did you call, and did you run any shell command or Python script?` | The answer lists only your server's tools and says no shell command or script was run. |
+| Check the files | `How many frames does the GIF have, and which dates?` | 10 frames, and the dates are the 10 days ending at the newest available date. |
+| Should not apply | `What was the sea surface temperature at Santa Monica pier yesterday?` | The skill is **not** used; the assistant explains that a gridded map is the wrong tool for a point value. |
 
 ## Exercise
 
-Remove the "When not to use" section from your skill and run the validator. Read the error, restore the section, and add one more not-applicable example that a user might plausibly confuse with your skill.
+Ask your assistant to add one more request that a user might plausibly confuse with your skill but that it should not handle, to the "When not to use" section. Reinstall, start a new session and check the skill stays out of the way.
 
 ## Common errors and recovery
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `/skill-name` or `$skill-name` not found | Not installed, or chat started before install | `install_skills.py <name>`; new chat in the repository folder |
-| Validator: name must match folder | `name:` differs from folder | Make them identical |
-| Validator: metadata must map … strings | `version: 0.1.0` unquoted | `version: "0.1.0"` |
-| Skill loads but tools fail | MCP server not connected | Check the server list in your assistant ([troubleshooting](../docs/troubleshooting.md#mcp-server-not-connected)) |
-| Skill never triggers naturally | Description too generic | Add "Use when …" with the user's words |
-| Works in one assistant, not another | Different discovery folders or behaviour | `install_skills.py --check`; test in each assistant and record results |
-| Edited `.claude/skills/...` or `.agents/skills/...` and lost changes | Installer overwrote the copy | Always edit `skills/<name>/` |
+| `/skill-name` or `$skill-name` not found | Skill not installed, or the session started before it was installed | Ask the assistant to install it; start a new session in the repository folder |
+| Skill never triggers by itself | Description too generic | Ask the assistant to add "Use when…" with the words people use |
+| Skill loads but the tools fail | MCP server not connected | Check the server list in your assistant ([troubleshooting](../docs/troubleshooting.md#mcp-server-not-connected)) |
+| Works in one assistant, not another | Different skill folders or behaviour | Ask the assistant to check that all installed copies are current; test in each assistant |
+| Your edits to an installed copy disappeared | Installed copies are overwritten | Always have the assistant edit the skill in `skills/<skill-name>/` and reinstall |
+| The assistant says the skill is valid but you did not see it checked | Claim without evidence | Ask it to show the check and its output |
 
 Next: [Tutorial 04 – Combine tools and skills](04-combine-tools-and-skills.md)

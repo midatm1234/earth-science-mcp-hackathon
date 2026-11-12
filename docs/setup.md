@@ -37,7 +37,7 @@ You do **not** need API keys or API credits for any provider, Azure OpenAI, a cl
 
 | Route | Steps |
 |---|---|
-| No GitHub account | Download the event bundle ZIP from the organizer's link, shared drive or USB stick (**TBD**). Check its SHA-256 if given: macOS/Linux `shasum -a 256 file.zip`; Windows `Get-FileHash file.zip`. Unzip. |
+| No GitHub account | Download the event bundle ZIP from the organizer's link or shared drive (**TBD**). Check its SHA-256 if given: macOS/Linux `shasum -a 256 file.zip`; Windows `Get-FileHash file.zip`. Unzip. |
 | Git | `git clone https://github.com/midatm1234/earth-science-mcp-hackathon.git` |
 
 In VS Code use **File → Open Folder…** and select the `earth-science-mcp-hackathon` folder **itself**. Every assistant reads its configuration from the top of the opened folder: `.mcp.json`, `.codex/config.toml`, `AGENTS.md`, `.claude/` and `.agents/`. If you open a parent folder, none of it is found.
@@ -85,9 +85,22 @@ Choose one. You can install more than one; they share the same project files.
 
 1. Extensions view (**Cmd/Ctrl+Shift+X**) → search **Claude Code** (publisher **Anthropic**) → Install.
 2. Open the Claude Code panel (Claude icon in the editor toolbar or activity bar, or Command Palette → "Claude Code").
-3. Approve the project MCP servers `obs-model-starter` and `earthdata` when asked (they are defined in `.mcp.json`). Type `/mcp` to see them connected. If they stay pending, open a terminal and run `claude` once to approve them (requires the [Claude Code CLI](https://code.claude.com/docs/en/setup): `curl -fsSL https://claude.ai/install.sh | bash`, Windows `irm https://claude.ai/install.ps1 | iex`).
+3. Approve the project MCP servers `obs-model-starter` and `earthdata` when asked (they are defined in `.mcp.json`). Type `/mcp` to see them connected. If they stay pending, open a terminal **in the `earth-science-mcp-hackathon` folder** and run `claude` once to approve them (requires the [Claude Code CLI](https://code.claude.com/docs/en/setup): `curl -fsSL https://claude.ai/install.sh | bash`, Windows `irm https://claude.ai/install.ps1 | iex`). Then restart the Claude Code panel (or start a new chat) and type `/mcp` again.
 4. Skills: `/obs-model-comparison …`.
 5. Type `/status` to confirm you are using your Claude account, not an API key.
+
+**If `/mcp` does not list `obs-model-starter` and `earthdata`**, check in this order:
+
+| Check | How | Fix |
+|---|---|---|
+| Right folder is open | The VS Code title shows `earth-science-mcp-hackathon`, and `.mcp.json` is visible at the top of the Explorer | **File → Open Folder…** and choose `earth-science-mcp-hackathon` itself, not its parent (for example `MCP_Hackathon`). Claude Code only reads `.mcp.json` from the folder it was opened in. |
+| Folder is trusted | Not in Restricted Mode | Choose **Yes, I trust the authors**. |
+| `uv` is visible to VS Code | `uv --version` in a VS Code terminal; `which uv` (macOS/Linux) or `where uv` (Windows) | Quit and restart VS Code. If `uv` is installed somewhere unusual (for example inside a conda or mamba `bin` folder), reinstall it with the command in Step 1 so it is on VS Code's `PATH`. |
+| Servers are approved | In a terminal in the project folder run `claude mcp list` | Run `claude` once and approve both servers. If you declined earlier, run `claude mcp reset-project-choices`, then `claude` again. |
+| Project works outside the assistant | `uv run python scripts/first_call.py` ends with `Success:` | Redo [Step 3](#step-3--install-the-project-and-the-skills). |
+| Panel has reloaded | – | Start a new chat or run **Developer: Reload Window** after any change to `.mcp.json`. |
+
+More causes and fixes: [Troubleshooting: MCP server not connected](troubleshooting.md#mcp-server-not-connected).
 
 ### Codex
 

@@ -3,10 +3,9 @@
 | | |
 |---|---|
 | **Scientific purpose** | Get a trustworthy number (model bias against observations) from a tool rather than from the model's memory. |
-| **Learning objective** | Make a successful MCP tool call three ways: from a plain client script over stdio, over Streamable HTTP, and through your AI assistant in VS Code (GitHub Copilot, Claude Code or Codex). Name the client, server and tool in each case. |
-| **Estimated time** | 30 minutes (5 if you completed [START_HERE](../START_HERE.md)) |
+| **Learning objective** | Make a successful MCP tool call two ways: from a plain client script over stdio, and through your AI assistant in VS Code (GitHub Copilot, Claude Code or Codex). Name the client, server and tool in each case. |
 | **Starting state** | [Setup](../docs/setup.md) done: VS Code and uv installed; repository folder open and trusted in VS Code; `uv sync` and `install_skills.py` run; one AI assistant signed in. |
-| **Credentials** | Your AI assistant's account sign-in for part C only. No other accounts. |
+| **Credentials** | Your AI assistant's account sign-in for part B only. No other accounts. |
 
 ## A. Plain MCP client over stdio (no AI)
 
@@ -41,25 +40,7 @@ uv run python scripts/first_call.py --site ATLANTIS
 
 Expected: `The tool returned an error ... No rows for site 'ATLANTIS' ... Observation sites: SYN-COAST, SYN-MOUNTAIN, SYN-VALLEY.`
 
-## B. The same server over Streamable HTTP
-
-Terminal 1 (leave running):
-
-```bash
-uv run python servers/obs-model-starter/server.py --transport http
-```
-
-Expected: `starting obs-model-starter 0.1.0 on http://127.0.0.1:8765/mcp` and `Uvicorn running on http://127.0.0.1:8765`.
-
-Terminal 2:
-
-```bash
-uv run python scripts/first_call.py --http http://127.0.0.1:8765/mcp
-```
-
-Same results as part A. Stop the server in terminal 1 with Ctrl+C. The scientific code is identical; only the transport changed. The server listens on `127.0.0.1`, so only your own laptop can reach it.
-
-## C. Through your AI assistant
+## B. Through your AI assistant
 
 The assistant is another MCP client. It starts the same server from the project configuration: `.mcp.json` for Copilot and Claude Code, `.codex/config.toml` for Codex.
 
@@ -88,23 +69,21 @@ The assistant is another MCP client. It starts the same server from the project 
    Expected: the assistant uses the `obs-model-comparison` skill and calls `describe_dataset` and `compare_model_to_obs`. The answer reports 23 pairs, bias ≈ −1.05 °C, RMSE ≈ 1.21 °C, the K→°C conversion, the excluded month 2020-07, a note that observations are points and model values are grid cells, and that the data are synthetic. Wording varies; the numbers must match part A.
 
 If the assistant instead runs `scripts/first_call.py` or Python in the terminal, it did **not** use MCP: fix the connection ([troubleshooting](../docs/troubleshooting.md#mcp-server-not-connected)).
+ 
+## Exercise
 
-## What you learned
+Ask your assistant: "Is model A or model B closer to the observations at SYN-MOUNTAIN?" Check that its numbers match the answer below.
 
-| Part | Client | Server | Transport | Tool |
-|---|---|---|---|---|
-| A | `scripts/first_call.py` | obs-model-starter | stdio | `compare_model_to_obs` |
-| B | `scripts/first_call.py` | obs-model-starter | Streamable HTTP | `compare_model_to_obs` |
-| C | Copilot, Claude Code or Codex | obs-model-starter | stdio (from `.mcp.json` / `.codex/config.toml`) | chosen by the model |
+<details><summary>Answer</summary>
 
-## Exercise (5 minutes)
+Model B is closer. At SYN-MOUNTAIN:
 
-1. Run `uv run python scripts/first_call.py --site SYN-MOUNTAIN --model syn-model-b-tas-monthly`. Which months are excluded and why?
-2. Ask your assistant: "Is model A or model B closer to the observations at SYN-MOUNTAIN?" Check that both numbers match the script.
+| Model | Valid pairs | Mean bias (model − obs) | RMSE |
+|---|---|---|---|
+| A | 22 | +2.808 °C | 2.901 °C |
+| B | 23 | −0.665 °C | 1.126 °C |
 
-<details><summary>Answer for 1</summary>
-
-`month_absent_from_obs: ['2020-12']` – the observation row is missing. Model B has no fill values. 23 valid pairs.
+Model A has 22 pairs because its 2021-11 value is missing; both models also lose 2020-12 because the observation is absent. Model A is converted from K to °C by the tool. Wording varies, but your assistant's numbers must match these. Both datasets are synthetic, so the ranking says nothing about real models.
 </details>
 
 ## Common errors and recovery
@@ -112,11 +91,9 @@ If the assistant instead runs `scripts/first_call.py` or Python in the terminal,
 | Symptom | Cause | Fix |
 |---|---|---|
 | `uv: command not found` | Terminal opened before install | Open a new terminal; see [troubleshooting](../docs/troubleshooting.md#installation) |
-| `FAILED: ... ConnectError` in part B | Server in terminal 1 not running, or different port | Start it; check the URL ends with `/mcp` |
-| `address already in use` | Port 8765 taken | `--port 8780` on the server and the matching URL on the client |
 | Assistant shows no `obs-model-starter` server | Folder not open at its top level, workspace not trusted, or (Codex) project not trusted | [troubleshooting](../docs/troubleshooting.md#mcp-server-not-connected) |
 | Server listed as failed | `uv` not visible to VS Code | Quit and restart VS Code; [troubleshooting](../docs/troubleshooting.md#mcp-server-not-connected) |
 | Assistant answers without calling a tool | It answered from general knowledge | Say "use the obs-model-starter tools"; check the tool was approved |
-| Usage limit message | Account limit reached | Continue with parts A and B; see [troubleshooting](../docs/troubleshooting.md#assistant-sign-in-and-usage-limits) |
+| Usage limit message | Account limit reached | Continue with part A; see [troubleshooting](../docs/troubleshooting.md#assistant-sign-in-and-usage-limits) |
 
 Next: [Tutorial 01 – Discover existing capabilities](01-discover-existing-capabilities.md)

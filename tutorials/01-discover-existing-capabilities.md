@@ -4,23 +4,22 @@
 |---|---|
 | **Scientific purpose** | Before building anything, establish that suitable data exist for your region and period, and that nobody has already built the capability. |
 | **Learning objective** | Use Earthdata MCP to find a collection, verify granules for a region and period, and inspect variables, services, software and citations; search the hackathon catalog; complete a [discovery record](../templates/discovery-record.md) with a reuse/extend/build decision. |
-| **Estimated time** | 45 minutes |
 | **Starting state** | [Tutorial 00](00-first-tool-call.md) done. Network access. `earthdata` connected in your AI assistant. Your team has a rough question (see [challenge cards](../docs/challenge-cards.md)). |
 | **Credentials** | None. Earthdata metadata search is open. Downloading files (not done here) needs a free Earthdata Login. |
 
 Background: [docs/discovery-first.md](../docs/discovery-first.md) explains the two required checks, the route for model data outside Earthdata, and why metadata discovery is not data access.
 
-## Step 1 – Create your team's folder (2 minutes)
+## Step 1 – Create your team's folder
 
 One person per team runs (choose short lowercase names with hyphens):
 
 ```bash
-uv run python scripts/new_contribution.py --team <team-slug> --server <server-name> --skill <skill-name>
+uv run python scripts/new_contribution.py --team <team-name> --server <server-name> --skill <skill-name>
 ```
 
 Example: `--team river-rats --server river-flow-tools --skill river-flow-check`. This creates `submissions/<team>/discovery-record.md` and runnable starter folders. If your team will **extend** `obs-model-starter` instead of building a new server, use only `--skill <name> --uses-server obs-model-starter`.
 
-## Step 2 – Check A: data discovery with Earthdata MCP (20 minutes)
+## Step 2 – Check A: data discovery with Earthdata MCP
 
 ### Option 1: your AI assistant with the discovery skill (recommended)
 
@@ -54,24 +53,9 @@ If the network or Earthdata is unavailable, open the dated cached example [earth
 
 If your model output lives elsewhere (CMIP6 on ESGF, Copernicus CDS, a lab server, your own run), record the source, run id, version, variable, units, grid, calendar and how you verified the files exist. See [discovery-first.md](../docs/discovery-first.md#model-data-not-indexed-in-earthdata).
 
-## Step 3 – Check B: existing capabilities (10 minutes)
-
-```bash
-uv run python scripts/catalog.py search temperature
-uv run python scripts/catalog.py search bias
-```
-
-Expected: `obs-model-starter` (bias/RMSE at a site) and the Earthdata entries. Also read [catalog/index.md](../catalog/index.md) and think about other MCP servers you know. Note what already exists and what is missing.
+## Step 3 – Check B: existing capabilities
 
 In your assistant you can ask: `Search this repository's catalog for anything that computes seasonal cycles or anomalies.`
-
-## Step 4 – Decide and record (10 minutes)
-
-Open `submissions/<team>/discovery-record.md` and fill in all ten sections. Choose **reuse**, **extend** or **build**, and write a single, small, specific contribution, for example:
-
-> Extend: add `seasonal_bias` to obs-model-starter, returning mean bias per season (DJF/MAM/JJA/SON) with pair counts, plus a skill that interprets seasonal bias.
-
-Ask a mentor to sign off before you change code.
 
 ## Example prompt
 
@@ -83,9 +67,9 @@ Ask a mentor to sign off before you change code.
 
 A completed discovery record: question; source; identifiers; WKT and ISO period; granule search with `total_hits` and first/last granule, dated; variables/units/fill values; services and software; capabilities considered; decision; contribution; tool trace.
 
-## Exercise (10 minutes)
+## Exercise
 
-Run the discovery for a different variable your team cares about (for example "sea surface temperature", "soil moisture", "aerosol optical depth"). Use `get_keywords` (or `--keyword`) first. How many collections have granules in your region and period? Which one would you choose and why (resolution, period, processing level)?
+Run the discovery for a different variable your team cares about (for example "sea surface temperature", "soil moisture", "aerosol optical depth"). How many collections have granules in your region and period? Which one would you choose and why (resolution, period, processing level)?
 
 ## Common errors and recovery
 

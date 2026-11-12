@@ -1,28 +1,28 @@
 # Peer testing
 
-Independent cross-team testing is a required part of the event, not an extra. In the provisional one-day format, the **final substantive 90-minute block** is reserved for it. Presentations and unfinished development may not use this time. If the organizer confirms a different event duration, adjust the allocation proportionally and record the change in the [agenda](agenda.md).
+Independent cross-team testing is a required part of the event, not an extra. A substantial, protected block at the end of the day is reserved for it. Presentations and unfinished development may not use this time. The mentor sets the pace and may adjust the schedule; the order of the steps stays the same.
 
-Participant steps: [tutorial 05, part B](../tutorials/05-submit-and-test-a-peer.md#part-b--peer-testing-the-90-minute-block). Report form: [templates/peer-test-report.md](../templates/peer-test-report.md).
+Participant steps: [tutorial 05, part B](../tutorials/05-submit-and-test-a-peer.md#part-b--peer-testing). Report form: [templates/peer-test-report.md](../templates/peer-test-report.md).
 
-## Structure of the 90 minutes
+## Structure of the block
 
-| Minutes | Activity | Who |
+| Step | Activity | Who |
 |---|---|---|
-| 0–10 | Handoff: assignments announced, packages distributed, authors step away | mentors |
-| 10–35 | Round 1: each team tests its first assigned contribution | reviewer teams |
-| 35–60 | Round 2: each team tests its second assigned contribution | reviewer teams |
-| 60–80 | Repair and retest: authors fix reported blockers (new frozen version); reviewers retest | authors + reviewers |
-| 80–90 | Record outcomes: reports saved; catalog `peer_testing` updated | reviewers + mentors |
+| 1 | Handoff: assignments announced, merged work pulled, authors step away | mentors |
+| 2 | Round 1: each team tests its first assigned contribution | reviewer teams |
+| 3 | Round 2: each team tests its second assigned contribution | reviewer teams |
+| 4 | Repair and retest: authors fix reported blockers (new frozen version); reviewers retest | authors + reviewers |
+| 5 | Record outcomes: reports saved; catalog `peer_testing` updated | reviewers + mentors |
 
 ## Before the block: freeze check
 
-Mentors confirm, for every contribution, before minute 0:
+Mentors confirm, for every contribution, before step 1:
 
-- [ ] frozen version recorded (commit SHA or archive SHA-256, in the catalog entry and submission form);
-- [ ] accessible package (archive on the shared folder/USB, or commit reachable by reviewers);
+- [ ] frozen version recorded (commit SHA, in the catalog entry and submission form);
+- [ ] contribution merged to `main` so reviewers can fetch and pull it;
 - [ ] tested setup command written in the README;
 - [ ] required fixture included and ≤ 1 MB per file;
-- [ ] documented example that runs within five minutes on a prepared laptop.
+- [ ] documented example that runs on a prepared laptop.
 
 Any unchecked item is recorded in the peer-test report as the starting state; it is not fixed by extending development into the block.
 
@@ -46,9 +46,9 @@ Authors may answer questions only through what is written in their README and su
 
 Reviewers test in a **clean project or session** with the event's common dependencies already installed:
 
-- a fresh copy of the event bundle (or a clean checkout of the frozen commit), already `uv sync`ed;
-- a new terminal and a new chat/session of the reviewer's AI assistant (Copilot, Claude Code or Codex) in that folder;
-- the contribution added only through its documented steps (unzip, `install_skills.py`, `client_config.py register`).
+- a clean checkout of `main` after the mentor merged the pull requests (fetch and pull in VS Code), already `uv sync`ed;
+- a new chat/session of the reviewer's AI assistant (Copilot, Claude Code or Codex) in that folder;
+- the contribution added only through its documented steps (fetch and pull, then install the skill and register the server).
 
 ## What reviewers must do
 

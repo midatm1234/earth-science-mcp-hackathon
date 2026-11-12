@@ -17,4 +17,4 @@ Please cite the EVE project when building on the registry patterns:
 
 > Atrio, À. R. et al. (2026). EVE: A Domain-Specific LLM Framework for Earth Intelligence. arXiv:2604.13071.
 
-Contributions keep their authors' copyright and the license stated in their catalog entry. Team members may appear by name or initials, as they choose ([mentor-assisted form](../.github/ISSUE_TEMPLATE/mentor-assisted-submission.md)).
+Contributions keep their authors' copyright and the license stated in their catalog entry. Team members may appear by name or initials, as they choose.

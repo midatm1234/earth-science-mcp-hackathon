@@ -1,7 +1,7 @@
 ## Contribution
 
-<!-- One MCP server and/or one related skill per pull request. Mentor-assisted
-submissions use the same form: templates/submission.md -->
+<!-- One MCP server and/or one related skill per pull request. Use the
+submission form: templates/submission.md -->
 
 | Field | Value |
 |---|---|
@@ -9,7 +9,6 @@ submissions use the same form: templates/submission.md -->
 | MCP server | `servers/<name>` |
 | Agent skill | `skills/<name>` |
 | Discovery record | `submissions/<team>/discovery-record.md` |
-| Route | pull request / mentor-assisted (opened by mentor on behalf of team) |
 
 ## Checklist
 

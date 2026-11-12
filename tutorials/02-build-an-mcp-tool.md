@@ -2,146 +2,82 @@
 
 | | |
 |---|---|
-| **Scientific purpose** | Turn one well-defined scientific calculation or data lookup into a tool an agent can call reproducibly, with units, missing-data rules and provenance in the result. |
-| **Learning objective** | Write a science function separate from its MCP wrapper; give the tool typed inputs, a useful description, a compact structured result and clear errors; test it in-process and over stdio; run it over HTTP. |
-| **Estimated time** | 90 minutes (team work) |
-| **Starting state** | Discovery record signed off ([tutorial 01](01-discover-existing-capabilities.md)). Either your scaffolded `servers/<server-name>/` or the decision to extend `servers/obs-model-starter/`. |
-| **Credentials** | None for the core track. If your tool calls a service that needs a key, read it from an environment variable and document it; never put it in a file. |
+| **Scientific purpose** | Turn a well-defined scientific calculation or data lookup into tools an agent can call reproducibly, with units, missing-data rules and provenance in the result. |
+| **Learning objective** | Describe your scientific need to an AI assistant, let it build the MCP tools, check what it built, and try the tools in a new chat. |
+| **Starting state** | [Tutorial 01](01-discover-existing-capabilities.md) done, and your team knows which calculation or data lookup it wants to turn into a tool. |
+| **Credentials** | None for the core track. If your tool calls a service that needs a key, the key must come from an environment variable, never from a file. |
 
-## How a tool is built
+## What you do and what the assistant does
 
-Open [servers/obs-model-starter/](../servers/obs-model-starter/) side by side with your server.
+You decide **what the tool should answer** and **how to check it**. The AI assistant decides **how many tools to build** and writes the code, tests and catalog entry. The repository's instructions ([AGENTS.md](../AGENTS.md), and `CLAUDE.md` for Claude Code) already tell the assistant the project rules, so you do not need to repeat them.
 
-| Layer | File | Rule |
-|---|---|---|
-| Science | `science.py` | Plain Python. No MCP imports. Explicit units, missing-data rules, assumptions. Raises `DataError` with an actionable sentence. |
-| MCP wrapper | `server.py` | `@mcp.tool()` function: typed parameters with `Field(description=...)`, a docstring that says what it returns and how it fails, converts `DataError` to `ToolError`. Logs to stderr. |
-| Data | `data/` + `data/README.md` | Small (≤ 1 MB per file), redistributable, with provenance. |
-| Tests | `tests/test_science.py`, `tests/test_server.py` | Hand-computed expected values; one real MCP call; one invalid-input case checking `is_error`. |
+## Step 1 – Describe the tool to your assistant
 
-## Step 1 – Run the template as-is (5 minutes)
+Write down, in plain words:
 
-```bash
-uv run pytest servers/<server-name>/tests
-```
+- the scientific question the tool should answer;
+- the data it should use (what you found in tutorial 01);
+- what a correct answer looks like, for example one number you can check by hand.
 
-Expected: `5 passed`. The template tool `summarize_values` already works. Now replace it.
+Do not say how many tools to build. Ask the assistant to propose that.
 
-## Step 2 – Write the science function (30 minutes)
+## Step 2 – Ask your assistant to build it
 
-Worked example (extending the starter with a seasonal bias). Add to `servers/obs-model-starter/science.py`:
-
-```python
-SEASONS = {"DJF": (12, 1, 2), "MAM": (3, 4, 5), "JJA": (6, 7, 8), "SON": (9, 10, 11)}
-
-
-def seasonal_bias(catalog, obs_dataset_id, model_dataset_id, site_id, start=None, end=None):
-    """Mean bias (model - obs) per meteorological season, using the same pairing rules."""
-    base = compare_model_to_obs(catalog, obs_dataset_id, model_dataset_id, site_id, start, end)
-    obs_meta, model_meta = get_dataset(catalog, obs_dataset_id), get_dataset(catalog, model_dataset_id)
-    obs = {r.month: r.value for r in read_records(catalog, obs_meta) if r.site_id == site_id}
-    mod = {r.month: r.value for r in read_records(catalog, model_meta) if r.site_id == site_id}
-    out = {}
-    for season, months in SEASONS.items():
-        diffs = [convert(mod[m], model_meta.units, obs_meta.units) - obs[m]
-                 for m in base["matched_months"] if int(m[5:7]) in months]
-        out[season] = {"n_pairs": len(diffs),
-                       "mean_bias": round(sum(diffs) / len(diffs), 3) if diffs else None}
-    return {"site_id": site_id, "units": base["units"], "seasons": out,
-            "pairing": base["alignment_rule"], "excluded": base["excluded"],
-            "provenance": base["provenance"], "warnings": base["warnings"]}
-```
-
-Note: DJF here groups calendar months 12, 1, 2 regardless of year; say so in the description.
-
-## Step 3 – Wrap it as a tool (15 minutes)
-
-Add to `server.py`:
-
-```python
-@mcp.tool(annotations=READ_ONLY)
-def seasonal_bias(
-    obs_dataset_id: Annotated[str, Field(description="Observation dataset id.")],
-    model_dataset_id: Annotated[str, Field(description="Model dataset id.")],
-    site_id: Annotated[str, Field(description="Site id, e.g. 'SYN-VALLEY'.")],
-    start: Annotated[str | None, Field(description="First month 'YYYY-MM'.")] = None,
-    end: Annotated[str | None, Field(description="Last month 'YYYY-MM'.")] = None,
-) -> dict[str, Any]:
-    """Mean bias (model - observation) per season DJF/MAM/JJA/SON at one site.
-
-    Uses the same pairing, unit conversion and exclusion rules as compare_model_to_obs.
-    DJF pools December, January and February of any year in the period.
-    Returns per-season n_pairs and mean_bias in observation units; a season with no pairs has mean_bias null.
-    """
-    return _run(science.seasonal_bias, obs_dataset_id, model_dataset_id, site_id, start, end)
-```
-
-Good descriptions say **what is returned, in which units, and how it fails**. The model chooses tools and builds arguments from this text.
-
-## Step 4 – Test it (25 minutes)
-
-Science test with a hand-computed value (in `tests/test_science.py`), reusing the `_tiny_catalog` helper:
-
-```python
-def test_seasonal_bias_hand_computed(tmp_path):
-    cat = _tiny_catalog(tmp_path,
-        "SYN-COAST,2020-01-01,10,good\nSYN-COAST,2020-07-01,20,good\n",
-        "SYN-COAST,2020-01-15,284.15\nSYN-COAST,2020-07-15,292.15\n")   # +1 in DJF, -1 in JJA
-    out = science.seasonal_bias(cat, "syn-station-tas-monthly", "syn-model-a-tas-monthly", "SYN-COAST")
-    assert out["seasons"]["DJF"] == {"n_pairs": 1, "mean_bias": 1.0}
-    assert out["seasons"]["JJA"] == {"n_pairs": 1, "mean_bias": -1.0}
-    assert out["seasons"]["MAM"]["mean_bias"] is None
-```
-
-Protocol test (in `tests/test_server.py`): add `"seasonal_bias"` to `EXPECTED_TOOLS` and a call that checks `is_error` for a bad site. Then:
-
-```bash
-uv run pytest servers/obs-model-starter/tests
-uv run python scripts/check_all.py --fast
-```
-
-Update the tool list in `catalog/entries/<server>.yaml` and run `uv run python scripts/catalog.py index`.
-
-## Step 5 – Try it with your AI assistant (10 minutes)
-
-Start a new chat/session (assistants start MCP servers when a session begins; in VS Code you can also use **MCP: List Servers** → Restart), then:
+Open the repository folder in VS Code and start a **new** chat or session in your AI assistant (GitHub Copilot in Agent mode, Claude Code or Codex). Paste a prompt like the one below, with your own question, server name and team name.
 
 ```text
-Which season has the largest model A bias at SYN-MOUNTAIN?
+Build an MCP server named sst-latest for team <team-name> in this repository.
+Question it should answer: what is the latest sea surface temperature data available?
+First use the earthdata MCP tools to find a suitable global sea surface temperature collection
+(for example GHRSST MUR L4) and look at its newest granule. Then propose how many tools are needed
+and what each does, and build them. The tool should return the collection id, the time of the newest
+granule and its name, with the date checked. Return metadata only: do not download data and do not
+ask for Earthdata credentials. Tests must run offline, using a saved sample response.
+Follow AGENTS.md. Tell me what you built and what you could not verify.
 ```
 
-Expected: a call to `seasonal_bias` and an answer with per-season bias in °C and pair counts.
+The assistant may ask you to approve the plan and each command it runs. Read the plan before you approve it: if you disagree with the proposed tools, say so and ask it to revise.
 
-A new server created with `scripts/new_contribution.py` is already registered for all assistants (in `.mcp.json` and `.codex/config.toml`). If you created the folder by hand, register it:
+## Step 3 – Check what it built
 
-```bash
-uv run python scripts/client_config.py register <server-name>
+Ask the assistant to explain the result, then check it against this list:
+
+| Check | What to look for |
+|---|---|
+| Tools | Each tool does one clear thing and has a plain-language description. |
+| Inputs | Each input says what it is and gives an example. |
+| Output | Short and structured: numbers, units, ids. Not raw data files. |
+| Rules in the result | Units, the date checked, what was excluded, and where the data come from. |
+| Errors | A bad input gives a sentence that says what to change. |
+| Tests | At least one expected value you can confirm by hand. |
+| Honesty | The assistant says which checks it ran and which it did not. |
+
+If something is missing, tell the assistant what to change and ask it to run the checks again.
+
+## Step 4 – Try the tools with your AI assistant
+
+The server is registered for all three assistants automatically. A newly added MCP server does not appear in the session where it was built. **Exit this session and start a new one** to see it. If your assistant asks you to approve the new server, approve it.
+
+To confirm the server is connected, list the servers in the new session (Copilot: **MCP: List Servers**; Claude Code: `/mcp`; Codex: ask "Which MCP tools do you have?"). Then ask a question without naming the tool:
+
+```text
+What is the latest sea surface temperature data available?
 ```
 
-Over HTTP for a second client: `uv run python servers/<server-name>/server.py --transport http` (template port 8766).
-
-## Design checklist
-
-- Inputs typed and described; optional inputs have safe defaults.
-- Output is compact JSON: numbers, short lists, ids – not raw arrays or files.
-- Units, time convention, pairing/missing-data rules and provenance are in the output.
-- Errors are sentences that say what to change.
-- No `print()` to stdout. No network calls in tests. No credentials in code.
-- Science separate from the wrapper; tests use hand-computed values.
+Expected: the assistant asks permission to call your tool, then reports the collection, the time of the newest granule and the date checked. The newest granule should be only a day or two old for a daily product such as GHRSST MUR L4. To cross-check, ask the assistant to answer the same question with the `earthdata` tools alone (`get_granules` sorted newest first); the two answers should agree. This is a metadata answer: it tells you what exists, not the temperature values. If the assistant answers without calling your tool, say "use the sst-latest tools" and check the server is connected.
 
 ## Exercise
 
-Make one invalid input produce a helpful error, e.g. `start` after `end`, or an unknown site. Add a test that checks `result.is_error` and the message.
+Ask your assistant a question your tool cannot answer, for example a collection name that does not exist. The tool should return a helpful error, not a crash. If it does not, ask the assistant to fix it and add a test for it.
 
 ## Common errors and recovery
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `ModuleNotFoundError: science` in tests | `tests/conftest.py` missing | Copy it from the template |
-| Assistant does not see the new tool | Session started before the change | New chat/session; Copilot: **MCP: List Servers** → Restart; Claude Code: `/mcp`; Codex: new chat |
-| Server fails only in the assistant, works in pytest | Something prints to stdout | Use `log.info(...)`; never `print()` |
-| `Input validation error` | Wrong argument type | Check the schema with `first_call.py`-style client or the Inspector |
-| Validator: "pin an exact version" | Added a dependency without `==` | `uv add package==X.Y.Z`; update `requirements.txt` to match |
-| Tool returns huge output | Returning raw data | Summarise; return counts, statistics, ids, URLs |
+| Assistant does not see the new tool | Session started before the server existed | Start a new chat or session; check the server list (see Step 4) |
+| Server shows as failed | The server code has an error | Ask the assistant to run the server tests and fix the failure |
+| Assistant answers from memory without calling a tool | It did not use MCP | Say "use the tools from the sst-latest server" |
+| Tool returns a huge result | It returns raw data | Ask for counts, statistics, ids or links instead |
+| The assistant says a check passed but you did not see it run | Claim without evidence | Ask it to show the command and its output |
 
 Next: [Tutorial 03 – Create an agent skill](03-create-an-agent-skill.md)
