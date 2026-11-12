@@ -24,7 +24,7 @@ Starter repository for an in-person hackathon where teams of Earth scientists gi
 | Assistant | VS Code integration | Account |
 |---|---|---|
 | **GitHub Copilot** | built into VS Code (Chat view) | GitHub account with Copilot (Copilot Free exists; limits apply) |
-| **Claude Code** | Anthropic's *Claude Code* extension | Claude subscription that includes Claude Code |
+| **Claude Code** | Anthropic's *Claude Code* extension | Claude subscription (JPL genai API) |
 | **Codex** | OpenAI's *Codex* extension | ChatGPT account (Codex is included in ChatGPT plans, including Free; limits apply) |
 
 All three read the same repository: MCP servers from [.mcp.json](.mcp.json) (Copilot, Claude Code) and [.codex/config.toml](.codex/config.toml) (Codex), skills from `skills/` installed for every assistant by one command. What was tested with each is in [docs/compatibility.md](docs/compatibility.md).
