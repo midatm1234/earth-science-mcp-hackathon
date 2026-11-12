@@ -1,16 +1,15 @@
 # Submission form
 
-The same form is used for both routes: **pull request** and **mentor-assisted**. See [tutorial 05](../tutorials/05-submit-and-test-a-peer.md).
+This form is submitted with your pull request. See [tutorial 05](../tutorials/05-submit-and-test-a-peer.md).
 
 | Field | Value |
 |---|---|
 | Team name (slug) | |
 | Team members (names or initials) | |
-| Route | pull request / mentor-assisted |
 | MCP server id | `servers/<name>` |
 | Agent skill id | `skills/<name>` |
 | Version | 0.1.0 |
-| Frozen reference | git commit SHA or archive SHA-256 (from `scripts/package.py`) |
+| Frozen reference | git commit SHA |
 | Discovery record | `submissions/<team>/discovery-record.md` |
 
 ## Checklist (all must be ticked before the freeze)

@@ -23,7 +23,7 @@ reverse proxy / gateway  ── TLS, auth, rate limits, request size limits, acc
    └─► container: team-b-tools
 ```
 
-One container per contribution, built from the frozen reference (commit SHA or archive SHA-256) recorded in the catalog.
+One container per contribution, built from the frozen reference (commit SHA) recorded in the catalog.
 
 ## Endpoint configuration
 

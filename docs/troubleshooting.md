@@ -20,7 +20,7 @@ Find your symptom, apply the fix, and re-run the check from [setup](setup.md#wha
 | `invalid peer certificate` / `CERTIFICATE_VERIFY_FAILED` | A corporate proxy re-signs TLS. Try `uv sync --native-tls` (uses the system certificate store) or set `UV_NATIVE_TLS=1`. |
 | Behind an HTTP proxy | Set `HTTPS_PROXY=http://proxy:port` (and `HTTP_PROXY`) before running uv or claude. |
 | Earthdata MCP unreachable | `uv run python scripts/earthdata_probe.py --list-tools` to test. Use the [cached example](../examples/data/cached/earthdata_discovery_merra2_t2m.json) to keep working and mark live checks **blocked**. |
-| Venue Wi-Fi blocks downloads | Organizers provide the bundle and, if prepared, a wheelhouse on USB ([facilitator guide](facilitator-guide.md#offline-and-low-bandwidth-fallback)). |
+| Venue Wi-Fi blocks downloads | Organizers provide the bundle and, if prepared, a wheelhouse ([facilitator guide](facilitator-guide.md#offline-and-low-bandwidth-fallback)). |
 
 ## First tool call
 
@@ -105,4 +105,4 @@ Find your symptom, apply the fix, and re-run the check from [setup](setup.md#wha
 | `differs from uv.lock` | Make `requirements.txt` match `uv.lock`, or re-run `uv lock` after changing `pyproject.toml` |
 | `possible hardcoded API key` | Remove the secret; read it from an environment variable. If it is a false positive in a test, add `# secret-scan: ignore` and explain in the PR. |
 | `broken link` / `missing anchor` | Fix the relative path or heading; anchors are lowercase with hyphens |
-| `MISMATCH` from `package.py verify` | The archive changed after freezing; re-package and record the new SHA-256 |
+| Merged contribution missing after pull | You are not on `main`, or the PR is not merged yet; check the branch at the bottom left of VS Code and pull again |

@@ -58,7 +58,7 @@ All cards start with the [discovery record](../templates/discovery-record.md). N
 | | |
 |---|---|
 | Question | "In which season is the model too warm or too cold?" |
-| Contribution | `seasonal_bias` (worked example in [tutorial 02](../tutorials/02-build-an-mcp-tool.md)); skill that reports per-season bias with pair counts and warns about small samples |
+| Contribution | a tool that reports bias per season (your assistant decides how many tools are needed; see [tutorial 02](../tutorials/02-build-an-mcp-tool.md)); skill that reports per-season bias with pair counts and warns about small samples |
 | Prerequisites | Tutorials 00–02 |
 | Credentials | none |
 | Data volume | bundled fixture |

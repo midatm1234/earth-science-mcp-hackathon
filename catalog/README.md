@@ -20,7 +20,7 @@ One YAML file per artifact in [entries/](entries/); peer-test reports in [peer-t
 | `scientific_purpose` | yes | The scientific question it helps answer |
 | `team`, `authors` | yes | Author team and members (names or initials, as they choose) |
 | `version` | yes | Semantic version |
-| `source.path`, `source.ref` | yes | Folder and immutable reference: commit SHA or archive SHA-256 (`TBD-at-freeze` before freezing) |
+| `source.path`, `source.ref` | yes | Folder and immutable reference: commit SHA (`TBD-at-freeze` before freezing) |
 | `license`, `attribution` | yes | License of the artifact; anything reused and its license |
 | `data.classes`, `data.volume`, `data.provenance` | yes | `synthetic`, `cached live response`, `recorded demonstration`, `live call`, `real public data`, `user-supplied`; size; where provenance is documented |
 | `credentials` | yes | `none`, or each account/key needed and how to obtain it (never the value) |

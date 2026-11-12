@@ -22,9 +22,9 @@
 | **Earthdata MCP** | NASA's public MCP server for searching CMR metadata, at `https://cmr.earthdata.nasa.gov/mcp/v1`. It finds datasets; it is not a registry of MCP servers or skills. |
 | **Fill value** | A special number (e.g. `-9999`) meaning "missing" in a data file. |
 | **Fixture** | A small, fixed data file used for teaching and testing. |
-| **Freeze** | The moment a contribution's version is fixed for peer testing (commit SHA or archive SHA-256 recorded). |
+| **Freeze** | The moment a contribution's version is fixed for peer testing (commit SHA recorded). |
 | **Frontmatter** | The YAML block between `---` lines at the top of `SKILL.md`. |
-| **Git, fork, branch, pull request (PR)** | Version-control concepts. A fork is your copy of a repository on GitHub, a branch is a line of changes, and a PR asks maintainers to merge your branch. Optional here; the mentor-assisted route avoids them. |
+| **Git, fork, branch, pull request (PR)** | Version-control concepts. A fork is your copy of a repository on GitHub, a branch is a line of changes, and a PR asks maintainers to merge your branch. Teams submit by pull request; the mentor merges. |
 | **Granule** | One file (or file-like unit) within a collection, e.g. one month of MERRA-2. |
 | **JSON** | A text format for structured data, used for tool inputs and outputs. |
 | **JSON-RPC** | The message format MCP uses (requests with `method` and `params`, responses with `result` or `error`). |
