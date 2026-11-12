@@ -11,3 +11,13 @@ startup_timeout_sec = 60
 [mcp_servers.earthdata]
 url = "https://cmr.earthdata.nasa.gov/mcp/v1"
 tool_timeout_sec = 90
+
+[mcp_servers.sst-latest]
+command = "uv"
+args = ["run", "--quiet", "python", "servers/sst-latest/server.py", "--transport", "stdio"]
+startup_timeout_sec = 60
+
+[mcp_servers.swot-ssh]
+command = "uv"
+args = ["run", "--quiet", "python", "servers/swot-ssh/server.py", "--transport", "stdio"]
+startup_timeout_sec = 60

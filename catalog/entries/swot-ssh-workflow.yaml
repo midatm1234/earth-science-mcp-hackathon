@@ -1,0 +1,53 @@
+id: swot-ssh-workflow
+type: agent-skill
+origin: event
+title: Map the newest SWOT sea surface height pass
+scientific_purpose: >-
+  Guides an assistant to find SWOT sea surface height passes over a region in the last 10 days, fetch the newest, draw a Cartopy map and list the files, using only the swot-ssh tools and stating that SWOT is a swath measurement, not a daily gridded field.
+team: test
+authors:
+  - team test
+version: 0.1.0
+source:
+  path: skills/swot-ssh-workflow
+  ref: fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2
+license: Apache-2.0
+attribution: Original work by team test, modelled on the structure of the sst-map-workflow skill.
+data:
+  classes: [live call, real public data]
+  volume: none (uses the server's data)
+  provenance: servers/swot-ssh/README.md
+credentials: Earthdata Login (free) set up outside the chat, as EARTHDATA_TOKEN or a ~/.netrc entry; only the fetch step needs it
+network: none from the skill itself; the swot-ssh server calls NASA CMR (public) and the NASA PO.DAAC SWOT archive (login)
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: []
+requires_mcp_tools:
+  - swot-ssh/find_swot_passes
+  - swot-ssh/fetch_swot_pass
+  - swot-ssh/draw_swot_map
+  - swot-ssh/list_swot_output_files
+tools: []
+transports: []
+install: uv run python scripts/install_skills.py swot-ssh-workflow
+run:
+  claude-code: /swot-ssh-workflow Map the newest sea surface height pass over the California coast, 32 to 42 N and 128 to 117 W.
+runtime: not measured
+example:
+  prompt: Show me a map of recent sea surface height and eddies off California.
+  expected_output: Calls in order find_swot_passes, fetch_swot_pass, draw_swot_map, list_swot_output_files; reports region, pass times, units (m), quality flags applied, source, date checked and files; says SWOT is a swath measurement, not a daily gridded field.
+tests:
+  command: see tutorials/03-create-an-agent-skill.md (explicit, natural, negative checks)
+  evidence: submissions/test/submission.md
+status:
+  review: draft
+  local_verification:
+    result: not-run
+    date: ""
+    by: ""
+    platform: ""
+    evidence: ""
+  peer_testing: []
+  hosting:
+    status: not-applicable
+    endpoint: none

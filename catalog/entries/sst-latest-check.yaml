@@ -1,0 +1,51 @@
+# Catalog entry (copied to catalog/entries/sst-latest-check.yaml by scripts/new_contribution.py)
+id: sst-latest-check
+type: agent-skill
+origin: event
+title: Check how current the sea surface temperature data are
+scientific_purpose: >-
+  Guides an assistant to report how current NASA sea surface temperature data are, using only the sst-latest tool, with the date checked and a clear statement that this is metadata and not temperature values.
+team: test
+authors:
+  - team test
+version: 0.1.0
+source:
+  path: skills/sst-latest-check
+  ref: fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2
+license: Apache-2.0
+attribution: Original work by team test, modelled on the structure of the obs-model-comparison skill.
+data:
+  classes: [live call]
+  volume: none (uses the server's data)
+  provenance: servers/sst-latest/README.md
+credentials: none
+network: none from the skill itself; the sst-latest server calls NASA CMR (https://cmr.earthdata.nasa.gov/search)
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: []
+requires_mcp_tools:
+  - sst-latest/get_latest_sst_granule
+tools: []
+transports: []
+install: uv run python scripts/install_skills.py sst-latest-check
+run:
+  claude-code: /sst-latest-check How current is the global sea surface temperature data?
+runtime: under 1 minute of agent time (not measured)
+example:
+  prompt: What is the latest sea surface temperature data available?
+  expected_output: A call to get_latest_sst_granule, then the collection, newest granule name, start and end times, age in hours and date checked, stating the answer is metadata only.
+tests:
+  command: see tutorials/03-create-an-agent-skill.md (explicit, natural, negative checks)
+  evidence: submissions/test/submission.md
+status:
+  review: draft
+  local_verification:
+    result: not-run
+    date: ""
+    by: ""
+    platform: ""
+    evidence: ""
+  peer_testing: []
+  hosting:
+    status: not-applicable
+    endpoint: none

@@ -1,0 +1,8 @@
+# Runtime dependencies for pip or container installs. Pin every package with ==.
+# If you add a package, also add it to the root pyproject.toml (uv add <pkg>==<version>)
+# so uv.lock and this file agree. The validator checks this.
+mcp==2.3.0
+# Added for the map and animation tools (see README):
+cartopy==0.26.0     # map projections and coastlines
+matplotlib==3.11.2  # draws the maps
+pillow==13.0.0      # writes the GIF

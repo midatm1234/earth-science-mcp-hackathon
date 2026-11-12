@@ -1,0 +1,55 @@
+# Catalog entry (copied to catalog/entries/sst-map-workflow.yaml by scripts/new_contribution.py)
+id: sst-map-workflow
+type: agent-skill
+origin: event
+title: Map and animate recent sea surface temperature
+scientific_purpose: >-
+  Guides an assistant to fetch the newest 10 days of MUR sea surface temperature for a region, draw a Cartopy map and make a GIF animation, using only the sst-latest tools and stating that the result is a gridded analysis, not station data.
+team: test
+authors:
+  - team test
+version: 0.1.0
+source:
+  path: skills/sst-map-workflow
+  ref: fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2
+license: Apache-2.0
+attribution: Original work by team test, modelled on the structure of the obs-model-comparison skill.
+data:
+  classes: [live call, real public data]
+  volume: none (uses the server's data)
+  provenance: servers/sst-latest/README.md
+credentials: none
+network: none from the skill itself; the sst-latest server calls NASA CMR and NOAA CoastWatch ERDDAP (public, no login)
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: []
+requires_mcp_tools:
+  - sst-latest/get_newest_sst_dates
+  - sst-latest/fetch_sst_subset
+  - sst-latest/draw_sst_map
+  - sst-latest/make_sst_gif
+  - sst-latest/list_sst_output_files
+tools: []
+transports: []
+install: uv run python scripts/install_skills.py sst-map-workflow
+run:
+  claude-code: /sst-map-workflow Make a map and a 10-day animation of sea surface temperature for the California coast.
+runtime: a few minutes of agent time for 10 days (not measured)
+example:
+  prompt: Show me the last 10 days of ocean surface temperature off California as an animation.
+  expected_output: Calls in order get_newest_sst_dates, fetch_sst_subset x10, draw_sst_map, make_sst_gif, list_sst_output_files; reports region, dates, source, date checked and files; says it is a gridded analysis, not station data.
+tests:
+  command: see tutorials/03-create-an-agent-skill.md (explicit, natural, negative checks)
+  evidence: submissions/test/submission.md
+status:
+  review: draft
+  local_verification:
+    result: not-run
+    date: ""
+    by: ""
+    platform: ""
+    evidence: ""
+  peer_testing: []
+  hosting:
+    status: not-applicable
+    endpoint: none

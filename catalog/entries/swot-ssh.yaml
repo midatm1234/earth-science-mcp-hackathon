@@ -1,0 +1,57 @@
+# Catalog entry (copied to catalog/entries/swot-ssh.yaml by scripts/new_contribution.py)
+id: swot-ssh
+type: mcp-server
+origin: event
+title: Find, fetch and map SWOT sea surface height passes
+scientific_purpose: >-
+  Find SWOT KaRIn sea surface height passes over a region, download one pass with an Earthdata Login, and draw a Cartopy map of the valid, unflagged swath points.
+team: test
+authors:
+  - team test
+version: 0.1.0
+source:
+  path: servers/swot-ssh
+  ref: fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2
+license: Apache-2.0
+attribution: Original work by team test. Reads NASA PO.DAAC SWOT_L2_LR_SSH_D; no NASA code is reused.
+data:
+  classes: [synthetic, cached live response, live call, real public data]          # synthetic | cached live response | recorded demonstration | live call | real public data | user-supplied
+  volume: test files under 50 KB; about 9 MB downloaded per pass, deleted after the region is saved; output in git-ignored swot_output/
+  provenance: servers/swot-ssh/README.md
+credentials: Earthdata Login (free, https://urs.earthdata.nasa.gov) as a user token in EARTHDATA_TOKEN or a urs.earthdata.nasa.gov entry in ~/.netrc; only fetch_swot_pass needs it
+network: https://cmr.earthdata.nasa.gov/search (public) and https://archive.swot.podaac.earthdata.nasa.gov (login); Cartopy downloads Natural Earth coastlines once
+dependencies:
+  python: ">=3.11,<3.15"
+  packages: ["mcp==2.3.0", "netcdf4==1.7.5.1.post1", "cartopy==0.26.0", "matplotlib==3.11.2"]
+requires_mcp_tools: []
+client_name: swot-ssh   # server name in .mcp.json and .codex/config.toml
+tools:
+  - find_swot_passes
+  - fetch_swot_pass
+  - draw_swot_map
+  - list_swot_output_files
+transports: [stdio, streamable-http]
+install: uv sync
+run:
+  stdio: uv run python servers/swot-ssh/server.py --transport stdio
+  streamable-http: uv run python servers/swot-ssh/server.py --transport http
+runtime: tens of seconds per pass fetch, network dependent (not measured)
+example:
+  tool: find_swot_passes
+  input: {south: 32, north: 42, west: -128, east: -117, days: 10}
+  expected_output: {n_passes: 6}  # value from 2026-11-12; changes as new passes arrive
+tests:
+  command: uv run pytest servers/swot-ssh/tests
+  evidence: submissions/test/submission.md
+status:
+  review: draft
+  local_verification:
+    result: not-run
+    date: ""
+    by: ""
+    platform: ""
+    evidence: ""
+  peer_testing: []
+  hosting:
+    status: not-hosted
+    endpoint: TBD
