@@ -71,7 +71,7 @@ Pick **one** assistant and follow its column. Details and screenshots of each st
 | | GitHub Copilot | Claude Code | Codex |
 |---|---|---|---|
 | Install | Built into VS Code | Extensions view → **Claude Code** (publisher Anthropic) | Extensions view → **Codex** (publisher OpenAI) |
-| Sign in | Accounts menu → sign in with GitHub | Claude account (subscription), not an API key | Sign in with ChatGPT, not an API key |
+| Sign in | Accounts menu → sign in with GitHub | JPL gen api subscription | Sign in with ChatGPT, not an API key |
 | Open | Chat view (**View → Chat**); keep the default **Copilot** session (not *Local*) | Claude Code panel | Codex panel |
 | Allow this project's settings | Workspace trust from step 2 is enough | Approve `obs-model-starter` and `earthdata` when asked | Trust the project once ([how](docs/setup.md#codex)) |
 | Check MCP servers | Command Palette → **MCP: List Servers**: `obs-model-starter`, `earthdata` | type `/mcp` | ask "Which MCP tools do you have?" |
