@@ -9,7 +9,7 @@ This form is submitted with your pull request. See [tutorial 05](../../tutorials
 | MCP server id | `servers/sst-latest`, `servers/swot-ssh` |
 | Agent skill id | `skills/sst-latest-check`, `skills/sst-map-workflow`, `skills/swot-ssh-workflow` |
 | Version | 0.1.0 |
-| Frozen reference | git commit SHA, recorded as `source.ref` in each catalog entry |
+| Frozen reference | git commit SHA, recorded as `source.ref` in each catalog entry: `fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2` |
 | Discovery record | `submissions/<team>/discovery-record.md` |
 
 ## Checklist (all must be ticked before the freeze)

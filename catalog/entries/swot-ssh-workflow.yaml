@@ -10,7 +10,7 @@ authors:
 version: 0.1.0
 source:
   path: skills/swot-ssh-workflow
-  ref: TBD-at-freeze
+  ref: fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2
 license: Apache-2.0
 attribution: Original work by team test, modelled on the structure of the sst-map-workflow skill.
 data:

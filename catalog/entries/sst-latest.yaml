@@ -11,7 +11,7 @@ authors:
 version: 0.1.0
 source:
   path: servers/sst-latest
-  ref: TBD-at-freeze
+  ref: fa2400387dadd4ca2a3823b4ea91ea01d11ed3e2
 license: Apache-2.0
 attribution: Original work by team test. Queries NASA's public CMR search API; no NASA code is reused.
 data:
