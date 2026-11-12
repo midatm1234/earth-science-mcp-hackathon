@@ -14,9 +14,9 @@
 | 12:20–13:05 | Lunch | Mentors check each team runs `check_all.py --fast` | |
 | 13:05–13:50 | Skill | Write, install and test the skill (explicit, natural, negative) | [Tutorial 03](../tutorials/03-create-an-agent-skill.md) |
 | 13:50–14:20 | Combine | Earthdata MCP + team tool + skill in one session | [Tutorial 04](../tutorials/04-combine-tools-and-skills.md) |
-| 14:20–14:40 | Freeze and submit | `check_all.py`, package, record SHA-256, PR or mentor-assisted | [Tutorial 05 part A](../tutorials/05-submit-and-test-a-peer.md#part-a--freeze-and-submit-20-minutes-before-the-peer-testing-block) |
+| 14:20–14:40 | Freeze and submit | `check_all.py`, commit, record commit SHA, open PR | [Tutorial 05 part A](../tutorials/05-submit-and-test-a-peer.md#part-a--freeze-and-submit-before-peer-testing) |
 | 14:40–14:55 | Break + mentor freeze check | Mentors verify frozen version, package, setup command, fixture, 5-minute example | [Peer testing](peer-testing.md#before-the-block-freeze-check) |
-| **14:55–16:25** | **Peer testing (90 min, protected)** | 10 handoff · 25 round 1 · 25 round 2 · 20 repair and retest · 10 record outcomes | [Peer testing](peer-testing.md), [report template](../templates/peer-test-report.md) |
+| **14:55–16:25** | **Peer testing (90 min, protected)** | handoff · round 1 · round 2 · repair and retest · record outcomes | [Peer testing](peer-testing.md), [report template](../templates/peer-test-report.md) |
 | 16:25–17:10 | Closing session | 4-minute demos that include the independent peer-test result; no development | [Demo template](../templates/demo.md) |
 | 17:10–17:30 | Wrap-up | Catalog status, what happens to contributions, feedback form (**TBD**) | [catalog/index.md](../catalog/index.md) |
 

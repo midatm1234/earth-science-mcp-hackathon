@@ -1,18 +1,17 @@
 # Contributing
 
-Each team contributes **one small MCP server change (new server or extension) and one related agent skill**, plus a discovery record and a submission form. Two routes lead to the same review:
+Each team contributes **one small MCP server change (new server or extension) and one related agent skill**, plus a discovery record and a submission form. Contributions are submitted by pull request:
 
 | Route | For | Steps |
 |---|---|---|
-| Pull request | Participants with a GitHub account | branch → commit → push → PR (tutorial 05, [part A, step 3a](tutorials/05-submit-and-test-a-peer.md#3a-pull-request-route-if-you-use-github)) |
-| Mentor-assisted | Anyone, no GitHub needed | package ZIP → mentor verifies and opens the PR ([part A, step 3b](tutorials/05-submit-and-test-a-peer.md#3b-mentor-assisted-route-no-github-needed)) |
+| Pull request | Participants with a GitHub account | branch → commit → push → PR (tutorial 05, [part A, step 3](tutorials/05-submit-and-test-a-peer.md#3-submit-by-pull-request)) |
 
-The required files and metadata are identical for both routes.
+The mentor reviews and merges the pull requests.
 
 ## Start
 
 ```bash
-uv run python scripts/new_contribution.py --team <team-slug> --server <server-name> --skill <skill-name>
+uv run python scripts/new_contribution.py --team <team-name> --server <server-name> --skill <skill-name>
 ```
 
 Names: 3–40 characters, lowercase letters and digits separated by single hyphens, starting with a letter.
@@ -69,4 +68,4 @@ A merged pull request or an accepted entry does **not** mean a service is runnin
 
 ## Freezing a version
 
-Before peer testing: `uv run python scripts/package.py contribution <id>` for each artifact; record the SHA-256 (or commit SHA) as `source.ref`. Changes after the freeze require a new version.
+Before peer testing: commit each artifact and record the commit SHA as `source.ref`. Changes after the freeze require a new version.

@@ -7,10 +7,10 @@ For the organizer (Hugo Kyo Lee) and mentors. Participants do not need this page
 | Role | Responsibilities | Suggested ratio |
 |---|---|---|
 | Organizer | Decides TBD items, owns the repository and bundle, runs the clock, protects the peer-testing block | 1 |
-| Mentor | Setup clinic, team support, discovery sign-off, freeze check, mentor-assisted submissions, independent review when needed | 1 per 2–3 teams |
+| Mentor | Setup clinic, team support, discovery sign-off, freeze check, reviewing and merging pull requests, independent review when needed | 1 per 2–3 teams |
 | Setup-clinic lead | Runs the clinic table, tracks laptops that need a fallback | 1 (can be a mentor) |
 
-Mentors must be able to: run every tutorial on their own laptop; read a stack trace; use `git` and `gh` (for mentor-assisted pull requests); explain units and time alignment.
+Mentors must be able to: run every tutorial on their own laptop; read a stack trace; use `git` and `gh` (to review and merge pull requests); explain units and time alignment.
 
 ## Decisions the organizer must make (TBD list)
 
@@ -18,7 +18,7 @@ Mentors must be able to: run every tutorial on their own laptop; read a stack tr
 |---|---|---|
 | Event date, venue, duration, registration | README, agenda | TBD |
 | Public repository destination (GitHub org/repo) | README, START_HERE, setup, tutorial 05, CODEOWNERS | **Decided 2026-10-30:** [github.com/midatm1234/earth-science-mcp-hackathon](https://github.com/midatm1234/earth-science-mcp-hackathon) (public) |
-| Bundle distribution location (download page, shared drive, USB) | START_HERE, setup, tutorial 05 | TBD |
+| Bundle distribution location (download page or shared drive) | START_HERE, setup, tutorial 05 | TBD |
 | Which assistants/plans to recommend (Copilot Free, ChatGPT Free and Claude plans have usage limits) | setup | TBD – confirm against current GitHub, OpenAI and Anthropic plan pages |
 | Shared MCP server endpoint (future) | server-deployment-plan, .env.example | TBD – not needed for the event |
 | Feedback form | agenda | TBD |
@@ -33,7 +33,7 @@ Mentors must be able to: run every tutorial on their own laptop; read a stack tr
 | T−3 weeks | Confirm assistant/plan guidance; check [compatibility.md](compatibility.md) on Windows and Linux laptops (fill the "untested" rows). |
 | T−2 weeks | Send participants [START_HERE.md](../START_HERE.md) and ask them to finish steps 1–4. Offer a remote setup clinic. |
 | T−1 week | **Rehearsal** (checklist below). Freeze the starter version; build the bundle. |
-| T−1 day | Rebuild the bundle if anything changed; copy bundle and wheelhouse to USB sticks; print the agenda and the peer-test report template. |
+| T−1 day | Rebuild the bundle if anything changed; publish the bundle and wheelhouse; print the agenda and the peer-test report template. |
 
 ## Rehearsal checklist
 
@@ -50,8 +50,8 @@ Run on at least one macOS and one Windows laptop, ideally also Linux, from a cle
 - [ ] Earthdata live check: `uv run python scripts/earthdata_probe.py --list-tools`.
 - [ ] Scaffold a dummy team: `new_contribution.py --team rehearsal --server rehearsal-tools --skill rehearsal-check`; template tests pass; delete afterwards.
 - [ ] Package and verify: `package.py contribution obs-model-starter` then `package.py verify ...`.
-- [ ] Peer-test the starter with the report template in ≤ 25 minutes.
-- [ ] Mentor-assisted route end to end: ZIP → mentor imports → branch → PR → CI green.
+- [ ] Peer-test the starter with the report template.
+- [ ] Pull-request route end to end: branch → PR → CI green → mentor merges → participants fetch and pull in VS Code.
 - [ ] Venue: Wi-Fi allows `astral.sh`, `pypi.org`, `files.pythonhosted.org`, `claude.ai`, `api.anthropic.com`, `github.com`, `api.githubcopilot.com`, `chatgpt.com`, `api.openai.com`, `marketplace.visualstudio.com`, `cmr.earthdata.nasa.gov`; power strips; projector.
 - [ ] Time the setup clinic: how long does a fresh laptop take? Adjust the agenda.
 
@@ -89,20 +89,17 @@ With this route, use `uv run --no-sync` instead of `uv run` (so uv does not try 
 | Discovery | Sign each discovery record. Reject "build" decisions without a stated gap; steer to "extend" where possible. Keep scope to one tool + one skill. |
 | Build | Walk the room; insist on tests and on logging to stderr; watch for credentials in code. |
 | Lunch | Each team runs `check_all.py --fast`; note teams at risk. |
-| Freeze (14:20–14:40) | Teams package and record SHA-256. Mentors collect ZIPs from mentor-assisted teams. |
+| Freeze (14:20–14:40) | Teams commit, record the commit SHA and open their pull requests. |
 | Freeze check (14:40–14:55) | The five-item check from [peer-testing.md](peer-testing.md#before-the-block-freeze-check). Publish the assignment table. |
 | Peer testing | Keep time with a visible timer. Enforce: no author help, no development except repair window. Collect reports. |
 | Closing | Demos follow [templates/demo.md](../templates/demo.md); each states its peer-test result. |
 | After | Merge PRs with `status.review` decided by organizers; record `peer_testing` from reports; leave `hosting: not-hosted` unless a server is actually deployed; rebuild the bundle. |
 
-## Mentor-assisted submission procedure
+## Merging pull requests
 
-1. Receive the team's ZIP(s); check `uv run python scripts/package.py verify <zip>`.
-2. In a clean clone: `git checkout -b team/<team-slug>`; unzip at the repository root (paths inside start with `servers/`, `skills/`, `catalog/`).
-3. `uv run python scripts/check_all.py`.
-4. Commit with the team as co-authors if they consent (`Co-authored-by:` lines), push, open a PR using the template, and link the [mentor-assisted issue](../.github/ISSUE_TEMPLATE/mentor-assisted-submission.md) if used.
-
-The required files and metadata are identical to the PR route.
+1. Open each team's pull request and confirm CI is green and the template is filled in.
+2. Check the freeze items in [peer-testing.md](peer-testing.md#before-the-block-freeze-check).
+3. Merge the pull requests, then tell participants to fetch and pull in VS Code (the bottom-left branch must be `main`, then **Sync Changes**) before peer testing starts.
 
 ## When things go wrong
 

@@ -3,77 +3,78 @@
 | | |
 |---|---|
 | **Scientific purpose** | A capability is only useful if someone else can reproduce it. Independent testing finds the gaps authors cannot see. |
-| **Learning objective** | Freeze and submit your server and skill (pull request or mentor-assisted), then install another team's contribution in a clean session, run its example, invoke its skill, try new and invalid inputs, check units/provenance/limitations, and record a peer-test report with a retest. |
-| **Estimated time** | 20 minutes submission + the 90-minute peer-testing block |
+| **Learning objective** | Freeze and submit your server and skill (pull request), then install another team's contribution in a clean session, run its example, invoke its skill, try new and invalid inputs, check units/provenance/limitations, and record a peer-test report with a retest. |
 | **Starting state** | Tutorials 02–04 done; `submissions/<team>/submission.md` drafted. |
 | **Credentials** | Your AI assistant's account. GitHub account only for the pull-request route. |
 
-## Part A – Freeze and submit (20 minutes, before the peer-testing block)
+## Part A – Freeze and submit (before peer testing)
 
 ### 1. Pass the checks
 
-```bash
-uv run python scripts/catalog.py index
-uv run python scripts/check_all.py
+Paste this prompt into your AI assistant:
+
+```text
+Regenerate the catalog index, then run all the repository checks (offline, no LLM). Show me the last line of the output and list every failure with the file it comes from. Do not fix anything yet; wait for my go-ahead.
 ```
 
-Expected last line: `ALL CHECKS PASSED`. Fill `catalog/entries/<server>.yaml` and `<skill>.yaml` (no `REPLACE` left), and the checklist in `submissions/<team>/submission.md`.
+Expected: the assistant reports `ALL CHECKS PASSED`. Then ask:
+
+```text
+Open my catalog entries for <server-name> and <skill-name> and my submissions/<team>/submission.md. Tell me which fields still contain REPLACE or are empty, and which checklist items are not ticked. Do not invent evidence: for anything I have not run, mark it pending.
+```
+
+Fill `catalog/entries/<server>.yaml` and `<skill>.yaml` (no `REPLACE` left), and the checklist in `submissions/<team>/submission.md`.
 
 ### 2. Freeze a version
 
-```bash
-uv run python scripts/package.py contribution <server-name>
-uv run python scripts/package.py contribution <skill-name>
+```text
+Commit my server <server-name>, my skill <skill-name>, my catalog entries and submissions/<team-name> on my team branch, then tell me the full commit SHA. Put that SHA into source.ref of both catalog entries and into the submission form, commit again, and show me what changed. Wait for my approval before you push.
 ```
 
-Expected: `wrote dist/<name>-0.1.0.zip` and `sha256 <64 hex characters>`. Record the SHA-256 (or, on the PR route, the commit SHA) as `source.ref` in both catalog entries and in the submission form. After this, changes need a new version.
+Expected: a 40-character commit SHA recorded as `source.ref` in both catalog entries and in the submission form. After this, changes need a new version.
 
-### 3a. Pull-request route (if you use GitHub)
+### 3. Submit by pull request
 
-```bash
-git checkout -b team/<team-slug>
-git add servers/<server-name> skills/<skill-name> catalog/entries submissions/<team-slug>
-git commit -m "Add <server-name> and <skill-name> (<team-slug>)"
-git push -u origin team/<team-slug>
+```text
+Prepare a pull request for my team <team-name> against https://github.com/midatm1234/earth-science-mcp-hackathon. Use a new branch named for my team. Include only servers/<server-name>, skills/<skill-name>, catalog/entries and submissions/<team-name>. Show me the list of files and the proposed commit message and pull-request description, and wait for my approval before you commit or push anything. If I have not forked the repository, tell me and ask whether to fork it first.
 ```
 
-Then open a pull request on GitHub (https://github.com/midatm1234/earth-science-mcp-hackathon) and fill in the template. If you forked the repository first: `gh repo fork midatm1234/earth-science-mcp-hackathon --clone`, then the same commands. CI runs the same checks as `check_all.py` and never deploys anything.
+After you approve, the assistant commits, pushes and opens the pull request, and you fill in the template. CI runs the same checks as `check_all.py` and never deploys anything.
 
-### 3b. Mentor-assisted route (no GitHub needed)
+**Once the mentor merges the pull requests**, everyone gets the merged contributions with Git in VS Code:
 
-Give the two ZIP files from step 2 to your mentor (USB stick or the shared folder announced by the organizer, **TBD**). The mentor checks the SHA-256, runs `check_all.py`, and opens the pull request on your behalf using the [mentor-assisted template](../.github/ISSUE_TEMPLATE/mentor-assisted-submission.md). Same files, same metadata, same review.
+1. Open the repository folder in VS Code.
+2. At the bottom left, click the branch name (for example `main`) and make sure it is `main`.
+3. Click the circular **Sync Changes** arrow next to it, or open **Source Control** (left sidebar), click the `...` menu and choose **Fetch**, then **Pull**. This fetches and pulls the merged work from GitHub.
+4. Confirm that `servers/<server-name>`, `skills/<skill-name>` and `catalog/entries` now contain the new contribution, then start a new chat/session in your AI assistant.
 
 ### 4. Mentor freeze check (before testing starts)
 
-The mentor confirms for each contribution: frozen version recorded; package accessible to reviewers; setup command tested; required fixture included; documented example runs within five minutes. Contributions that fail this check are tested as-is and the failure is recorded – development does not continue into the testing block.
+The mentor confirms for each contribution: frozen version recorded; contribution merged to `main` so reviewers can fetch and pull it; setup command tested; required fixture included; documented example runs on a prepared laptop. Contributions that fail this check are tested as-is and the failure is recorded – development does not continue into the testing block.
 
-## Part B – Peer testing (the 90-minute block)
+## Part B – Peer testing
 
 Full procedure and rules: [docs/peer-testing.md](../docs/peer-testing.md). Copy [templates/peer-test-report.md](../templates/peer-test-report.md) to `catalog/peer-tests/<artifact-id>--<your-team>--1.md`.
 
-| Time | Activity |
+| Step | Activity |
 |---|---|
-| 10 min | Handoff: receive assignment and package; authors leave the table |
-| 25 min | Round 1: test your first assigned contribution |
-| 25 min | Round 2: test your second assigned contribution |
-| 20 min | Repair and retest: authors fix reported blockers (new version); reviewers retest |
-| 10 min | Record outcomes in reports and catalog entries |
+| 1 | Handoff: receive assignment; authors leave the table |
+| 2 | Round 1: test your first assigned contribution |
+| 3 | Round 2: test your second assigned contribution |
+| 4 | Repair and retest: authors fix reported blockers (new version); reviewers retest |
+| 5 | Record outcomes in reports and catalog entries |
+
+The mentor sets the pace; the steps stay in this order.
 
 ### Clean session
 
-Use the event's prepared environment (common dependencies already installed), a **new terminal** and a **new chat/session** in your AI assistant (any of the three; record which). Unzip the package into a fresh copy of the event bundle (or check out the frozen commit), then:
+Use the event's prepared environment (common dependencies already installed), and a **new chat/session** in your AI assistant (any of the three; record which). Get the other team's contribution after the mentor merges it: in VS Code, make sure the bottom-left branch is `main`, then click **Sync Changes** (or **Source Control** → `...` → **Fetch**, then **Pull**). Then paste:
 
-```bash
-uv run python scripts/package.py verify <path>/<name>-0.1.0.zip
-unzip -o <path>/<server-name>-0.1.0.zip      # Windows: Expand-Archive <path>\<server-name>-0.1.0.zip -DestinationPath . -Force
-unzip -o <path>/<skill-name>-0.1.0.zip
-uv run python scripts/install_skills.py <skill-name>
-uv run python scripts/client_config.py register <server-name>
+```text
+I am peer-testing another team's contribution: server <server-name> and skill <skill-name>. Check that servers/<server-name>, skills/<skill-name> and their catalog entries are present in this folder, and that the frozen commit SHA <sha> is in the git history. Then install the skill for all assistants and register the server in the client configuration files. Report each step and tell me when I need to start a new session.
 ```
 
-Unzip at the repository root: the archives contain `servers/…`, `skills/…` and `catalog/entries/…` paths, plus a `<name>-<version>.MANIFEST.json` checksum list (git-ignored).
-
-`client_config.py register` adds the server to `.mcp.json` (Copilot, Claude Code) and `.codex/config.toml` (Codex); then start a new session. For a hosted endpoint, add an `http` entry with its URL to both files instead (see the `earthdata` entries).
+Registering adds the server to `.mcp.json` (Copilot, Claude Code) and `.codex/config.toml` (Codex); then start a new session. For a hosted endpoint, add an `http` entry with its URL to both files instead (see the `earthdata` entries).
 
 ### Checks to run and record
 
@@ -85,14 +86,28 @@ Unzip at the repository root: the archives contain `servers/…`, `skills/…` a
 6. Check units, provenance and limitations in the answer.
 7. Report failures to authors immediately; after their fix, retest and record.
 
-Statuses: **pass**, **partial**, **fail**, **blocked**. If assistant usage limits or the network interrupt you, continue checks 1, 2, 4 and 5 with a plain client (pattern of [first_call.py](../scripts/first_call.py) or the MCP Inspector) and mark skill and combined-workflow checks **blocked**.
+Statuses: **pass**, **partial**, **fail**, **blocked**. If assistant usage limits or the network interrupt you, continue checks 1, 2, 4 and 5 with a plain client (ask your assistant for a plain MCP call like the one in [first_call.py](../scripts/first_call.py), or use the MCP Inspector) and mark skill and combined-workflow checks **blocked**.
 
 An author demonstrating their own work does not count as a peer test.
 
 ## Example prompt (reviewer)
 
 ```text
-/<their-skill> <their documented example>, then: <your additional input>. Report units and provenance.
+Use the <their-skill> skill to run its documented example: <their documented example>. Then repeat it with my additional input: <your additional input>. Report units and provenance, and show the tool trace.
+```
+
+Other useful prompts for the checks above:
+
+```text
+Call the documented example of the <server-name> server exactly as written in its README and show me the tool, the arguments and the output. Compare it with the README and tell me any difference.
+```
+
+```text
+Try an invalid input on the <server-name> server (an unknown id, an empty period or the wrong units). Tell me whether the error message says what to fix, and whether any result was returned that should not have been.
+```
+
+```text
+Write a peer-test report for <artifact-id> from the template in templates/peer-test-report.md, using only what we ran in this session. Mark any check we did not run as pending or blocked, and do not claim verification we did not do.
 ```
 
 ## Expected output
@@ -101,15 +116,15 @@ A completed peer-test report per artifact, with version/SHA, OS, assistant and i
 
 ## Exercise (practice before the day)
 
-Peer-test the starter: treat `obs-model-starter` and `obs-model-comparison` as another team's work and fill a report in 15 minutes. Use `SYN-COAST` with `include_suspect` as your additional input and `start: 2023-01` as your boundary case.
+Peer-test the starter: treat `obs-model-starter` and `obs-model-comparison` as another team's work and fill in a report. Ask your assistant to use `SYN-COAST` with suspect observations included as your additional input, and a start month of 2023-01 as your boundary case.
 
 ## Common errors and recovery
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `MISMATCH` on verify | Corrupted or wrong file | Ask authors/mentor for the package again; record the SHA you tested |
+| Contribution missing after pull | Not on `main`, or the PR is not merged yet | Check the bottom-left branch in VS Code, then fetch and pull again; record the commit SHA you tested |
 | Server not found after registering | Session started before registering | Start a new chat/session |
-| Two servers with the same name | Name collision with a user-level server | Rename or remove one; `uv run python scripts/client_config.py check` |
+| Two servers with the same name | Name collision with a user-level server | Ask your assistant to check the client configuration files for duplicate server names, then rename or remove one |
 | Authors keep coding during testing | Not allowed | Mentor records the frozen result; fixes only in repair window |
 | Only one team present | No independent reviewer | A mentor who did not author it performs the review |
 
